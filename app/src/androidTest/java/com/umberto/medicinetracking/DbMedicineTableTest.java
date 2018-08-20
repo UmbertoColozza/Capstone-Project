@@ -4,17 +4,13 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-
 import com.umberto.medicinetracking.database.AppDatabase;
 import com.umberto.medicinetracking.database.Medicine;
 import com.umberto.medicinetracking.database.TaskDao;
-import com.umberto.medicinetracking.utils.MedicineUtils;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;

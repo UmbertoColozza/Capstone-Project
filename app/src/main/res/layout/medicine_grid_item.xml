@@ -18,7 +18,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:adjustViewBounds="true"
-    android:layout_centerInParent="true"
+    android:contentDescription="@string/content_description_image_grid_item_layout"
+    android:layout_gravity="center"
     android:scaleType="fitStart"/>
     <TextView
         android:id="@+id/tvGridMedicineName"
@@ -39,7 +40,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/roundedbutton"
-            android:text="+"
+            android:text="@string/add_symbol"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,7 +53,6 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="TextView"
             app:layout_constraintEnd_toStartOf="@+id/gridButtonAdd"
             app:layout_constraintStart_toEndOf="@+id/gridButtonSubtract"
             app:layout_constraintTop_toTopOf="parent" />
@@ -65,7 +65,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/roundedbutton"
-            android:text="-"
+            android:text="@string/subtract_symbol"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>

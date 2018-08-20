@@ -44,8 +44,7 @@ public class ImagePagerAdapter extends PagerAdapter {
         //Get LayoutInflater
         LayoutInflater inflater=(LayoutInflater)container.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.image_page, container,false);
-        ImageView iv;
-        iv = (ImageView)view.findViewById(R.id.imageview_page);
+        ImageView iv = (ImageView)view.findViewById(R.id.imageview_page);
         DisplayMetrics dm=new DisplayMetrics();
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int height = dm.heightPixels;

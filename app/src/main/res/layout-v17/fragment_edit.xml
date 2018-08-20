@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_margin"
     android:layout_marginBottom="@dimen/top_margin"
-    android:layout_marginLeft="@dimen/side_margin"
-    android:layout_marginRight="@dimen/side_margin">
+    android:layout_marginStart="@dimen/side_margin"
+    android:layout_marginEnd="@dimen/side_margin">
         <LinearLayout android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -14,7 +14,8 @@
                 android:layout_height="wrap_content"
                 style="?android:attr/textAppearanceMedium"
                 android:layout_marginTop="@dimen/edit_title_margin_top"
-                android:text="@string/edit_text_title"/>
+                android:text="@string/edit_text_title"
+                android:labelFor="@+id/edit_text_title" />
             <EditText
                 android:id="@+id/edit_text_title"
                 android:hint="@string/edit_hint_title"
@@ -34,13 +35,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginRight="@dimen/body_margin"
+                    android:layout_marginEnd="@dimen/body_margin"
                     android:layout_weight="0.4">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="?android:attr/textAppearanceMedium"
-                        android:text="@string/edit_text_expire_data"/>
+                        android:text="@string/edit_text_expire_data"
+                        android:labelFor="@+id/edit_text_expire_data"/>
                     <EditText
                         android:id="@+id/edit_text_expire_data"
                         android:hint="@string/edit_text_expire_data"
@@ -55,13 +57,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginLeft="@dimen/body_margin"
+                    android:layout_marginStart="@dimen/body_margin"
                     android:layout_weight="0.4">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="?android:attr/textAppearanceMedium"
-                        android:text="@string/edit_text_quantity"/>
+                        android:text="@string/edit_text_quantity"
+                        android:labelFor="@+id/edit_text_quantity"/>
                     <EditText
                         android:id="@+id/edit_text_quantity"
                         android:hint="@string/edit_hint_quantity"
@@ -78,7 +81,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/edit_title_margin_top"
                 style="?android:attr/textAppearanceMedium"
-                android:text="@string/edit_text_description"/>
+                android:text="@string/edit_text_description"
+                android:labelFor="@+id/edit_text_description"/>
             <EditText
                 android:id="@+id/edit_text_description"
                 android:hint="@string/edit_hint_description"
@@ -118,19 +122,19 @@
                     android:background="@color/colorPrimary"
                     android:textColor="@color/white"
                     style="?android:buttonBarButtonStyle"
-                    android:drawableLeft="@drawable/ic_gallery"/>
+                    android:drawableStart="@drawable/ic_gallery"/>
                 <Button
                     android:id="@+id/button_camera"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    android:layout_marginLeft="@dimen/body_margin"
-                    android:layout_marginRight="@dimen/body_margin"
+                    android:layout_marginStart="@dimen/body_margin"
+                    android:layout_marginEnd="@dimen/body_margin"
                     android:text="@string/button_camera"
                     android:background="@color/colorPrimary"
                     style="?android:buttonBarButtonStyle"
                     android:textColor="@color/white"
-                    android:drawableLeft="@drawable/ic_camera"/>
+                    android:drawableStart="@drawable/ic_camera"/>
                 <Button
                     android:id="@+id/button_web"
                     android:layout_width="0dp"
@@ -140,7 +144,7 @@
                     android:background="@color/colorPrimary"
                     android:textColor="@color/white"
                     style="?android:buttonBarButtonStyle"
-                    android:drawableLeft="@drawable/ic_download"/>
+                    android:drawableStart="@drawable/ic_download"/>
             </LinearLayout>
                 <RelativeLayout
                     android:id="@+id/layout_edit_url"
@@ -153,14 +157,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:paddingLeft="0dp"
-                        android:paddingRight="@dimen/icon_button_width"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="@dimen/icon_button_width"
                         android:hint="@string/edit_hint_web"/>
                     <ImageButton
                         android:id="@+id/button_edit_url"
                         android:layout_width="@dimen/icon_button_width"
                         android:layout_height="@dimen/icon_button_height"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_margin="5dp"
                         android:contentDescription="@string/content_description_button_edit_url"
@@ -186,8 +190,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
                     android:text="@string/button_save"
-                    android:layout_marginLeft="@dimen/button_edit_margin"
-                    android:layout_marginRight="@dimen/button_edit_margin"
+                    android:layout_marginStart="@dimen/button_edit_margin"
+                    android:layout_marginEnd="@dimen/button_edit_margin"
                     android:textColor="@color/white"
                     style="?android:buttonBarButtonStyle"
                     android:background="@color/colorPrimary"/>
@@ -197,8 +201,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
                     android:text="@string/button_delete"
-                    android:layout_marginLeft="@dimen/button_edit_margin"
-                    android:layout_marginRight="@dimen/button_edit_margin"
+                    android:layout_marginStart="@dimen/button_edit_margin"
+                    android:layout_marginEnd="@dimen/button_edit_margin"
                     android:textColor="@color/white"
                     style="?android:buttonBarButtonStyle"
                     android:background="@color/colorAccent"/>

@@ -1,5 +1,10 @@
 package com.umberto.medicinetracking.ui;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SettingsActivity extends AppCompatActivity implements UploadTask.OnUploadProgress, DownloadTask.OnDownloadProgress {
+    private static final int REQUEST_STORAGE_PERMISSION = 1;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.layout_progress)
@@ -26,12 +32,26 @@ public class SettingsActivity extends AppCompatActivity implements UploadTask.On
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
 
-        //getDatabasePath()
         setupActionBar();
+        setTitle(getString(R.string.title_activity_settings));
     }
 
     //Export data if Button export is clicked
-    protected void exportClick(View view) {
+    public void exportClick(View view) {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // If you do not have permission, request it
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_STORAGE_PERMISSION);
+        } else {
+            exportToSD();
+        }
+
+    }
+
+    private void exportToSD(){
         mLayoutProgress.setVisibility(View.VISIBLE);
         if (PrefercenceUtils.getBackupRemote(this)) {
             UploadTask uploadTask = new UploadTask(this, this);
@@ -41,9 +61,8 @@ public class SettingsActivity extends AppCompatActivity implements UploadTask.On
             export.execute();
         }
     }
-
     //Import data if Button import is clicked
-    protected void importClick(View view) {
+    public void importClick(View view) {
         mLayoutProgress.setVisibility(View.VISIBLE);
         if (PrefercenceUtils.getBackupRemote(this)) {
             DownloadTask downloadTask = new DownloadTask(this, this);
@@ -74,5 +93,21 @@ public class SettingsActivity extends AppCompatActivity implements UploadTask.On
     @Override
     public void onFinishDownload() {
         mLayoutProgress.setVisibility(View.GONE);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Called when you request permission to read and write to external storage
+        switch (requestCode) {
+            case REQUEST_STORAGE_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    exportToSD();
+                }
+                break;
+            }
+        }
     }
 }

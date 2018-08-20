@@ -1,8 +1,12 @@
 package com.umberto.medicinetracking.backup;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
+
 import com.umberto.medicinetracking.database.AppDatabase;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +31,13 @@ public class ExportSingleFileToSD extends AsyncTask<Void, Integer,Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
+        //If not have permission finish export.
+        if(ContextCompat.checkSelfPermission(mContext,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            return null;
+        }
         if(!SdIsPresent()){
             return null;
         }

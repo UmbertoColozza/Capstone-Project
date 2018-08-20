@@ -50,7 +50,7 @@ public interface TaskDao {
     List<Medicine> selectAllMedicineTest();
 
     //Queries to Table "Photo Gallery"
-    //Selecct list of photo ordered by name
+    //Select list of photo ordered by name
     @Query("SELECT * FROM photo WHERE medicine_id=:idMedicine ORDER BY created_date")
     LiveData<List<Photo>> selectAllPhotoByMedicine(int idMedicine);
 

@@ -21,7 +21,6 @@ import com.umberto.medicinetracking.database.Photo;
 import com.umberto.medicinetracking.database.PhotoViewModel;
 import com.umberto.medicinetracking.database.PhotoViewModelFactory;
 import com.umberto.medicinetracking.database.Repository;
-import com.umberto.medicinetracking.utils.ImageUtils;
 import com.umberto.medicinetracking.utils.MedicineUtils;
 import java.util.List;
 import butterknife.BindView;

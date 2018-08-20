@@ -21,9 +21,8 @@
     <dimen name="icon_button_width">36dp</dimen>
     <dimen name="icon_button_height">36dp</dimen>
 
-    <dimen name="font_title_message_size">28dp</dimen>
-    <dimen name="font_title_size">20dp</dimen>
-    <dimen name="font_body_size">16dp</dimen>
+    <dimen name="font_title_message_size">28sp</dimen>
+    <dimen name="font_title_size">20sp</dimen>
 
     <dimen name="list_item_margin_top">16dp</dimen>
     <dimen name="list_item_margin_text_top">8dp</dimen>
@@ -37,7 +36,6 @@
     <dimen name="pref_margin">8dp</dimen>
 
     <dimen name="top_margin">8dp</dimen>
-    <dimen name="bottom_margin">8dp</dimen>
     <dimen name="side_margin">16dp</dimen>
     <dimen name="bar_height">56dp</dimen>
 

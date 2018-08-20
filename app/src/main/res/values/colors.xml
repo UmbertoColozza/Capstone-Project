@@ -6,7 +6,6 @@
     <color name="textPrimaryColor">#000000</color>
     <color name="textSecondaryColor">#A0A0A0</color>
 
-    <color name="title_color">#FFFFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="photo_placeholder">#ccc</color>
     <color name="image_button_background_tint">#FFFFFF</color>

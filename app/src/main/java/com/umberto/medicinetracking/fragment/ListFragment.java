@@ -34,9 +34,9 @@ public class ListFragment extends Fragment implements SharedPreferences.OnShared
     private static final String SEARCH_KEY="search_key";
     @BindView(R.id.rvMedicine) RecyclerView mRecyclerViewMedicine;
     private List<Medicine> mMedicineList;
-    MedicineListAdapter medicineListAdapter;
-    GridLayoutManager gridLayoutManager;
-    ItemTouchHelper itemTouchhelper;
+    private MedicineListAdapter medicineListAdapter;
+    private GridLayoutManager gridLayoutManager;
+    private ItemTouchHelper itemTouchhelper;
     private String mSearch;
     private MedicineSearchListViewModel viewModel;
     private Repository repository;
@@ -138,29 +138,11 @@ public class ListFragment extends Fragment implements SharedPreferences.OnShared
                 });
     }
 
-    private void updateColumns(){
-        int numberOfColumns=1;
-        //if attr isTable equal false set one column else set three column
-        if(PrefercenceUtils.showGrid(getContext())) {
-            if(getResources().getBoolean(R.bool.isTablet)){
-                numberOfColumns=6;
-            } else {
-                numberOfColumns=3;
-            }
-        }
-        gridLayoutManager = new GridLayoutManager(this.getContext(), numberOfColumns);
-        mRecyclerViewMedicine.setLayoutManager(gridLayoutManager);
-    }
-
     private void setListFragment(){
         int numberOfColumns=1;
         //if attr isTable equal false set one column else set three column
         if(PrefercenceUtils.showGrid(getContext())) {
-            if(getResources().getBoolean(R.bool.isTablet)){
-                numberOfColumns=6;
-            } else {
-                numberOfColumns=3;
-            }
+            numberOfColumns=getResources().getInteger(R.integer.number_columns);
         }
         gridLayoutManager = new GridLayoutManager(this.getContext(), numberOfColumns);
         mRecyclerViewMedicine.setLayoutManager(gridLayoutManager);

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.umberto.medicinetracking.R;
 import com.umberto.medicinetracking.database.Photo;

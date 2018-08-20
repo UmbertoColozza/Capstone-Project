@@ -64,7 +64,7 @@ public class Medicine  implements Parcelable {
         return this.title;
     }
 
-    public void setDescription(String name){
+    public void setDescription(String description){
         this.description=description;
     }
     public String getDescription(){

@@ -28,7 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:contentDescription="@string/content_description_image_alert"
         android:scaleType="fitStart"
         android:src="@drawable/ic_notify"/>
 </LinearLayout>

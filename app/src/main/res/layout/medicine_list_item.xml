@@ -55,7 +55,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:background="@drawable/roundedbutton"
-            android:text="+"
+            android:text="@string/add_symbol"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
@@ -65,7 +65,6 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             style="?android:attr/textAppearanceMedium"
-            android:text="TextView"
             app:layout_constraintEnd_toStartOf="@+id/listButtonAdd" />
 
         <Button
@@ -75,7 +74,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:background="@drawable/roundedbutton"
-            android:text="-"
+            android:text="@string/subtract_symbol"
             app:layout_constraintEnd_toStartOf="@+id/tvListQuantity" />
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>

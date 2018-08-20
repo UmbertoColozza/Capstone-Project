@@ -56,12 +56,12 @@ import com.umberto.medicinetracking.utils.ImageUtils;
 import com.umberto.medicinetracking.utils.MedicineUtils;
 import com.umberto.medicinetracking.utils.PrefercenceUtils;
 
-//Edit medicine and photo gallery. Photo gallery is visible after medicine insrted.
+//Edit medicine and photo gallery. Photo gallery is visible after medicine inserted.
 public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDeleteImageListener, Repository.InsertCallback {
     private static final String MEDICINE_ID="medicine_id";
     private static final String EDIT_TITLE="title";
     private static final String EDIT_DESCRIPTION="description";
-    private static final String EDIT_EXPYRE_DATA="expire_data";
+    private static final String EDIT_EXPIRE_DATA="expire_data";
     private static final String EDIT_WEB="edit_web";
     private static final String EDIT_QUANTITY="edit_quantity";
     private static final int REQUEST_IMAGE_CAPTURE = 2;
@@ -69,7 +69,7 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
 
     private static final int REQUEST_CAMERA_PERMISSION = 3;
     private static final String FILE_PROVIDER_AUTHORITY = "com.umberto.medicinetracking.fileprovider";
-    static final int REQUEST_IMAGE_GET = 4;
+    private static final int REQUEST_IMAGE_GET = 4;
     private String mTempPhotoPath;
     private Target targetBitmap;
     private OnDeleteListener deleteClickListener;
@@ -118,7 +118,7 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
             mMedicineId = savedInstanceState.getInt(MEDICINE_ID,-1);
             mEditTitle.setText(savedInstanceState.getString(EDIT_TITLE));
             mEditDescription.setText(savedInstanceState.getString(EDIT_DESCRIPTION));
-            mEditExpireData.setText(savedInstanceState.getString(EDIT_EXPYRE_DATA));
+            mEditExpireData.setText(savedInstanceState.getString(EDIT_EXPIRE_DATA));
             mEditWeb.setText(savedInstanceState.getString(EDIT_WEB));
             mEditQuantity.setText(savedInstanceState.getString(EDIT_QUANTITY));
         }
@@ -521,7 +521,7 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
         outState.putInt(MEDICINE_ID, mMedicineId);
         outState.putString(EDIT_TITLE, mEditTitle.getText().toString());
         outState.putString(EDIT_DESCRIPTION, mEditDescription.getText().toString());
-        outState.putString(EDIT_EXPYRE_DATA, mEditExpireData.getText().toString());
+        outState.putString(EDIT_EXPIRE_DATA, mEditExpireData.getText().toString());
         outState.putString(EDIT_WEB, mEditWeb.getText().toString());
         outState.putString(EDIT_QUANTITY, mEditQuantity.getText().toString());
     }

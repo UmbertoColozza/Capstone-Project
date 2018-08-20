@@ -20,6 +20,7 @@
         android:layout_marginRight="@dimen/fab_margin"
         android:contentDescription="@string/action_add"
         android:src="@android:drawable/ic_input_add"
+        android:stateListAnimator="@animator/fab_state_list_anim"
         app:elevation="@dimen/fab_elevation" />
         <FrameLayout
             android:id="@+id/fragment_list"

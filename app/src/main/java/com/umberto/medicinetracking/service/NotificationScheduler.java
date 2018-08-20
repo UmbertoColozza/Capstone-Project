@@ -89,7 +89,7 @@ public class NotificationScheduler
         builder.setContentTitle(title)
                 .setContentText(content)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_notify)
+                .setSmallIcon(R.drawable.notify_icon)
                 .setChannelId("4565")
                 .setContentIntent(pendingIntent);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

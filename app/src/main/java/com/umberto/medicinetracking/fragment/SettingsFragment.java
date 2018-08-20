@@ -1,14 +1,19 @@
 package com.umberto.medicinetracking.fragment;
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v14.preference.SwitchPreference;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.widget.Toast;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -23,6 +28,7 @@ import com.umberto.medicinetracking.utils.PrefercenceUtils;
 public class SettingsFragment extends PreferenceFragmentCompat implements
         OnSharedPreferenceChangeListener {
     private static final int REQUEST_CODE_SIGN_IN = 0;
+    private static final int REQUEST_STORAGE_PERMISSION = 1;
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -52,6 +58,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             setChecked(preference, sharedPreferences.getBoolean(preference.getKey(), false));
         }
 
+        if(key==getString(R.string.pref_backup_sync_key)){
+            boolean value = sharedPreferences.getBoolean(preference.getKey(), false);
+            if(value && !PrefercenceUtils.getBackupRemote(getContext())){
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    // If you do not have permission, request it
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQUEST_STORAGE_PERMISSION);
+                }
+            }
+        }
         if(key==getString(R.string.pref_backup_remote_key)){
             boolean value = sharedPreferences.getBoolean(preference.getKey(), false);
             if(value){
@@ -59,8 +78,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 startActivityForResult(googleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
             } else {
                 signOut();
-                Preference accountPreferenc=findPreference(getString(R.string.pref_backup_account_key));
-                accountPreferenc.setSummary("");
+                Preference accountPreference=findPreference(getString(R.string.pref_backup_account_key));
+                accountPreference.setSummary("");
             }
         }
     }
@@ -136,13 +155,27 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 PrefercenceUtils.setBackupAccount(getContext(),true);
                 setPreferenceSummary(getString(R.string.pref_backup_account_key), NetworkUtils.accountDisplayName(getContext()));
             } else {
-                //Signed in wrond return preference checked false
+                //Signed in wrong return preference checked false
                 PrefercenceUtils.setBackupRemote(getContext(), false);
-                //android.support.v14.preference.SwitchPreference sp=(android.support.v14.preference.SwitchPreference) getPreferenceScreen().findPreference(getString(R.string.pref_backup_remote_key));
-                //sp.setChecked(false);
                 PrefercenceUtils.setBackupRemote(getContext(), false);
             }
+        } else if(requestCode==REQUEST_STORAGE_PERMISSION){
 
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        // Called when you request permission to read and write to external storage
+        switch (requestCode) {
+            case REQUEST_STORAGE_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Preference preference = findPreference(getString(R.string.pref_backup_sync_key));
+                    setChecked(preference, false);
+                }
+                break;
+            }
         }
     }
 

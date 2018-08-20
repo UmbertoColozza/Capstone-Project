@@ -32,7 +32,6 @@
     <string name="edit_text_title">Title</string>
     <string name="edit_hint_title">Input title</string>
     <string name="edit_text_expire_data">Expire date</string>
-    <string name="edit_hint_expire_data">Input Expire date</string>
     <string name="edit_text_quantity">Quantity</string>
     <string name="edit_hint_quantity">Input quantity</string>
     <string name="edit_text_description">Description</string>
@@ -50,7 +49,6 @@
     <string name="action_add">Add medicine</string>
     <string name="permission_denied">Permission denied</string>
     <string name="saved_message">Image Saved at %1$s</string>
-    <string name="not_saved">Image not saved!</string>
     <string name="error">Error finding image</string>
 
     <string name="alert_confirm_title">Confirm</string>
@@ -58,12 +56,24 @@
     <string name="alert_confirm_positive">YES</string>
     <string name="alert_confirm_negative">NO</string>
 
-    <string name="channel_name">Medicine tracking channel</string>
-    <string name="channel_description">Medicine tracking channel</string>
-
     <string name="alert_dialog_title">Caution!!!</string>
 
     <string name="btn_close_text">Close</string>
     <string name="image_content_description">Image </string>
     <string name="medicine_saved_message">Medicine saved!</string>
+
+    <string name="content_description_button_edit_url">Submit edit url</string>
+    <string name="content_description_cover_image">Cover image</string>
+    <string name="content_description_image_widget_item">Image of item list in widget</string>
+    <string name="content_description_image_alert">Medicine image in alert layout</string>
+    <string name="content_description_photo_item_description">Image of photo gallery description medicine</string>
+    <string name="content_description_button_share">Image share button</string>
+    <string name="content_description_button_trash">Image trash button</string>
+    <string name="content_description_image_grid_item_layout">Image of item grid layout</string>
+    <string name="content_description_widget_app">Icon of medicine widget</string>
+    <string name="content_description_image_edit">Image of edit item gallery</string>
+    <string name="content_description_image_page">Image of gallery</string>
+    <string name="add_symbol">+</string>
+    <string name="subtract_symbol">-</string>
+    <string name="close_symbol">X</string>
 </resources>

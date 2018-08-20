@@ -78,7 +78,6 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
         AppDatabase.closeDb(mContext);
         boolean found=false;
         for(Metadata data : mMetadata){
-            //Log.d("Main",data.getTitle()+" "+data.getOriginalFilename()+" --- Exist "+file.getName()+" = "+(data.getTitle().equals(file.getName())));
             if(data.getTitle().equals(mFiles[mFilePosition].getName())){
                 found=true;
                 break;

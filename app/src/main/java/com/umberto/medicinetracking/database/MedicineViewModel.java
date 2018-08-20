@@ -1,11 +1,7 @@
 package com.umberto.medicinetracking.database;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.content.Context;
-
-import java.util.List;
 
 public class MedicineViewModel extends ViewModel {
     private int mMedicineId;

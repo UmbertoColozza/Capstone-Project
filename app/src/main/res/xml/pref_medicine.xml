@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="@bool/pref_show_list_grid_default"
+        android:key="@string/pref_show_list_grid_key"
+        android:summary="@string/pref_show_list_grid_summary"
+        android:title="@string/pref_show_list_grid_label" />
+
+    <SwitchPreference
+        android:defaultValue="@bool/pref_backup_sync_default"
+        android:key="@string/pref_backup_sync_key"
+        android:summaryOff="@string/pref_show_false"
+        android:summaryOn="@string/pref_show_true"
+        android:title="@string/pref_backup_sync_label" />
+
+    <SwitchPreference
+        android:defaultValue="@bool/pref_backup_remote_default"
+        android:key="@string/pref_backup_remote_key"
+        android:summary="@string/pref_backup_remote_summary"
+        android:title="@string/pref_backup_remote_label" />
+
+    <SwitchPreference
+        android:defaultValue="@bool/pref_backup_start_default"
+        android:key="@string/pref_backup_start_key"
+        android:summary="@string/pref_backup_start_summary"
+        android:title="@string/pref_backup_start_label" />
+
+    <Preference android:title="@string/pref_backup_account_label"
+        android:key="@string/pref_backup_account_key"
+        android:shouldDisableView="true"/>
+
+    <Preference
+        android:layout="@layout/pref_export_layout"
+        />
+</PreferenceScreen>

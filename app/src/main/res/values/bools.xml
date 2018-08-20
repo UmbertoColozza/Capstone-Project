@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="pref_show_list_grid_default">false</bool>
+    <bool name="pref_backup_sync_default">false</bool>
+    <bool name="pref_backup_remote_default">false</bool>
+    <bool name="pref_backup_start_default">false</bool>
+</resources>

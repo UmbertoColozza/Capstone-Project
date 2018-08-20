@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="@dimen/item_photo_width"
+    android:layout_height="@dimen/item_photo_width">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/ivPhoto"
+        android:scaleType="centerCrop"
+        android:layout_margin="10dp"
+        />
+
+        <Button
+            android:id="@+id/button_delete_photo"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/roundedbutton"
+            android:text="X" />
+
+</RelativeLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fab_elevation">6dp</dimen>
+    <dimen name="fab_press_translation_z">6dp</dimen>
+    <dimen name="fab_margin">24dp</dimen>
+
+    <dimen name="app_bar_elevation">4dp</dimen>
+
+    <dimen name="list_toolbar_side_margin">0dp</dimen>
+
+    <dimen name="body_margin">8dp</dimen>
+    <dimen name="edit_title_margin_top">16dp</dimen>
+    <dimen name="edit_text_margin_top">8dp</dimen>
+    <dimen name="edit_text_padding">8dp</dimen>
+    <dimen name="text_padding">8dp</dimen>
+    <dimen name="description_photo_height">304dp</dimen>
+
+    <dimen name="item_photo_width">100dp</dimen>
+    <dimen name="item_photo_height">100dp</dimen>
+
+    <dimen name="icon_button_width">36dp</dimen>
+    <dimen name="icon_button_height">36dp</dimen>
+
+    <dimen name="font_title_message_size">28dp</dimen>
+    <dimen name="font_title_size">20dp</dimen>
+    <dimen name="font_body_size">16dp</dimen>
+
+    <dimen name="list_item_margin_top">16dp</dimen>
+    <dimen name="list_item_margin_text_top">8dp</dimen>
+    <dimen name="list_item_margin_text_bottom">8dp</dimen>
+
+    <dimen name="list_item_margin">4dp</dimen>
+
+    <dimen name="widtget_header_padding">8dp</dimen>
+    <dimen name="widtget_item_padding">8dp</dimen>
+
+    <dimen name="pref_margin">8dp</dimen>
+
+    <dimen name="top_margin">8dp</dimen>
+    <dimen name="bottom_margin">8dp</dimen>
+    <dimen name="side_margin">16dp</dimen>
+    <dimen name="bar_height">56dp</dimen>
+
+    <dimen name="button_edit_margin">16dp</dimen>
+</resources>

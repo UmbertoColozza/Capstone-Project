@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0076bf</color>
+    <color name="colorPrimaryDark">#019ae8</color>
+    <color name="colorAccent">#2a56c6</color>
+    <color name="textPrimaryColor">#000000</color>
+    <color name="textSecondaryColor">#A0A0A0</color>
+
+    <color name="title_color">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="photo_placeholder">#ccc</color>
+    <color name="image_button_background_tint">#FFFFFF</color>
+    <color name="toolbar_text_color_light">#FFFFFF</color>
+
+    <color name="transparent">#80FFFFFF</color>
+
+    <color name="cardview_state_pressed_background">#95abe2</color>
+    <color name="cardview_state_checked_background">#bfccee</color>
+</resources>

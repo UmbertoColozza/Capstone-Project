@@ -1,0 +1,38 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
+    <style name="MySearchView" parent="Widget.AppCompat.SearchView">
+        <item name="queryBackground">@android:color/white</item>
+        <item name="submitBackground">@android:color/white</item>
+        <!-- Background for the search query section (e.g. EditText) -->
+        <!-- <item name="queryBackground">@android:color/black</item> -->
+        <!-- Background for the actions section (e.g. voice, submit) -->
+        <!-- <item name="submitBackground">...</item> -->
+        <!-- Close button icon -->
+        <!-- <item name="closeIcon">...</item> -->
+        <!-- Search button icon -->
+        <!-- <item name="searchIcon">...</item> -->
+        <!-- Go/commit button icon -->
+        <!-- <item name="goIcon">...</item> -->
+        <!-- Voice search button icon -->
+        <!-- <item name="voiceIcon">...</item> -->
+        <!-- Commit icon shown in the query suggestion row -->
+        <!-- <item name="commitIcon">...</item> -->
+        <!-- Layout for query suggestion rows -->
+    </style>
+    <style name="MedicineThemeToolbar" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textColorPrimary">@color/toolbar_text_color_light</item>
+    </style>
+
+    <style name="collapsingToolbarLayoutTitleColor" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>

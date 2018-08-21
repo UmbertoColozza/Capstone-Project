@@ -47,12 +47,9 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnIt
         ButterKnife.bind(this);
         setupActionBar();
 
-        mFabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Intent intent = new Intent(getApplicationContext(), EditActivity.class);
-                startActivity(intent);
-            }
+        mFabAdd.setOnClickListener(view -> {
+            final Intent intent = new Intent(getApplicationContext(), EditActivity.class);
+            startActivity(intent);
         });
 
         mRepository=new Repository(this);
@@ -155,8 +152,8 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnIt
         if(!TextUtils.isEmpty(medicine.getFileName())){
             Picasso.with(this)
                     .load(ImageUtils.getFile( this, medicine.getFileName()))
-                    .placeholder(R.drawable.ic_notify)
-                    .error(R.drawable.ic_notify)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
                     .into(dialogImage);
         }
         alertadd.setView(view);

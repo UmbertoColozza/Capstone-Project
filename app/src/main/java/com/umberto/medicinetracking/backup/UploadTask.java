@@ -93,7 +93,7 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
                         DriveContents contents = createContentsTask.getResult();
                         OutputStream outputStream = contents.getOutputStream();
                         String mimeType = getMimeType(mFiles[mFilePosition].getName());
-                        if (mimeType == "image/jpeg") {
+                        if (mimeType.equals("image/jpeg")) {
                             //------ THIS IS AN EXAMPLE FOR PICTURE ------
                             ByteArrayOutputStream bitmapStream = new ByteArrayOutputStream();
                             Bitmap image = BitmapFactory.decodeFile(mFiles[mFilePosition].getAbsolutePath());

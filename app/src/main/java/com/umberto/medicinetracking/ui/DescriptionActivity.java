@@ -69,11 +69,11 @@ public class DescriptionActivity extends AppCompatActivity implements Descriptio
             if (!TextUtils.isEmpty(mMedicine.getFileName())) {
                 Picasso.with(this)
                         .load(ImageUtils.getFile(this, mMedicine.getFileName()))
-                        .placeholder(R.drawable.ic_notify)
-                        .error(R.drawable.ic_notify)
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.placeholder)
                         .into(mPhoto);
             } else {
-                mPhoto.setImageResource(R.drawable.ic_notify);
+                mPhoto.setImageResource(R.drawable.placeholder);
             }
 
             mPhoto.setContentDescription(mMedicine.getTitle());

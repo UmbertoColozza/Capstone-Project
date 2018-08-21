@@ -15,7 +15,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.2"
             android:contentDescription="@string/content_description_widget_app"
-            android:src="@drawable/ic_notify"/>
+            android:src="@drawable/placeholder"/>
         <TextView
             android:layout_width="0dp"
             android:layout_weight="0.8"

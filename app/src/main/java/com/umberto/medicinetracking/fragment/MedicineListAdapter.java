@@ -60,8 +60,8 @@ public class MedicineListAdapter extends RecyclerView.Adapter<MedicineListAdapte
             holder.ivCover.setContentDescription(mMedicineList.get(position).getTitle());
             Picasso.with(mContext)
                     .load(ImageUtils.getFile(mContext, mMedicineList.get(position).getFileName()))
-                    .placeholder(R.drawable.ic_notify)
-                    .error(R.drawable.ic_notify)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
                     .into(holder.ivCover);
         }
     }
@@ -96,28 +96,22 @@ public class MedicineListAdapter extends RecyclerView.Adapter<MedicineListAdapte
             }
             view.setOnClickListener(this);
 
-            buttonAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position=getAdapterPosition();
-                    final Medicine medicine=mMedicineList.get(position);
-                    medicine.setQuantity(medicine.getQuantity()+1);
-                    tvQuantity.setText(Integer.toString(medicine.getQuantity()));
-                    mRepository.insertUpdateMedicine(medicine, null);
-                }
+            buttonAdd.setOnClickListener(v -> {
+                int position=getAdapterPosition();
+                final Medicine medicine=mMedicineList.get(position);
+                medicine.setQuantity(medicine.getQuantity()+1);
+                tvQuantity.setText(Integer.toString(medicine.getQuantity()));
+                mRepository.insertUpdateMedicine(medicine, null);
             });
-            buttonSubtract.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position=getAdapterPosition();
-                    final Medicine medicine=mMedicineList.get(position);
-                    medicine.setQuantity(medicine.getQuantity()-1);
-                    if(medicine.getQuantity()<0) {
-                        medicine.setQuantity(0);
-                    }
-                    tvQuantity.setText(Integer.toString(medicine.getQuantity()));
-                    mRepository.insertUpdateMedicine(medicine, null);
+            buttonSubtract.setOnClickListener(v -> {
+                int position=getAdapterPosition();
+                final Medicine medicine=mMedicineList.get(position);
+                medicine.setQuantity(medicine.getQuantity()-1);
+                if(medicine.getQuantity()<0) {
+                    medicine.setQuantity(0);
                 }
+                tvQuantity.setText(Integer.toString(medicine.getQuantity()));
+                mRepository.insertUpdateMedicine(medicine, null);
             });
         }
         @Override

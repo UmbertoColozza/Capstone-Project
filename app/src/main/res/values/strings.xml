@@ -48,15 +48,17 @@
     <string name="quantity">Quantity: </string>
     <string name="action_add">Add medicine</string>
     <string name="permission_denied">Permission denied</string>
-    <string name="saved_message">Image Saved at %1$s</string>
+    <string name="saved_message">Image saved</string>
     <string name="error">Error finding image</string>
 
     <string name="alert_confirm_title">Confirm</string>
     <string name="alert_confirm_message">Are you sure?</string>
     <string name="alert_confirm_positive">YES</string>
     <string name="alert_confirm_negative">NO</string>
-
     <string name="alert_dialog_title">Caution!!!</string>
+    <string name="alert_error_title">Error</string>
+    <string name="alert_error_message_title">Title is required!</string>
+    <string name="alert_ok_button">OK</string>
 
     <string name="btn_close_text">Close</string>
     <string name="image_content_description">Image </string>

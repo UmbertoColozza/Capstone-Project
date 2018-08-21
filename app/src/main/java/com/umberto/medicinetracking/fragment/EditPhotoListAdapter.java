@@ -48,8 +48,8 @@ public class EditPhotoListAdapter extends RecyclerView.Adapter<EditPhotoListAdap
             holder.mPhoto.setContentDescription(TextUtils.concat(mContext.getString(R.string.image_content_description),Integer.toString(position)));
             Picasso.with(mContext)
                     .load(ImageUtils.getFile( mContext, mPhotoList.get(position).getFileName()))
-                    .placeholder(R.drawable.ic_notify)
-                    .error(R.drawable.ic_notify)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
                     .into(holder.mPhoto);
         }
     }

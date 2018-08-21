@@ -31,5 +31,5 @@
         android:layout_gravity="center"
         android:contentDescription="@string/content_description_image_alert"
         android:scaleType="fitStart"
-        android:src="@drawable/ic_notify"/>
+        android:src="@drawable/placeholder"/>
 </LinearLayout>

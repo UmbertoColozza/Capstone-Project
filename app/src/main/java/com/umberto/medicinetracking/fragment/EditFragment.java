@@ -21,7 +21,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.google.android.gms.common.util.CollectionUtils;
 import com.squareup.picasso.Picasso;
 import com.umberto.medicinetracking.R;
 import java.io.File;
@@ -177,6 +181,15 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
         //When edit text expire data has focus show date picker dialog
         if(mEditExpireData.hasFocus()) {
             mDatePickerDialog.show();
+        } else {
+            //Validate inpu date
+            String expireData = mEditExpireData.getText().toString();
+            if (!TextUtils.isEmpty(expireData)) {
+                Date date = MedicineUtils.dateFromString(expireData);
+                if (!MedicineUtils.dateToString(date).equals(expireData)) {
+                    mEditExpireData.setText(MedicineUtils.dateToString(date));
+                }
+            }
         }
     }
 
@@ -272,10 +285,10 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
     private void showAlertTitle(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        builder.setTitle("Error");
-        builder.setMessage("Title is required?");
+        builder.setTitle(getString(R.string.alert_error_title));
+        builder.setMessage(R.string.alert_error_message_title);
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -333,7 +346,7 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
             mMedicine.setFileName(photo.getFileName());
             mRepository.insertUpdateMedicine(mMedicine, null);
         }
-        if(photoList== null || photoList.size()==0){
+        if(CollectionUtils.isEmpty(photoList)){
             setupViewModelPhoto();
         }
         PrefercenceUtils.setMedicineChanged(getContext(), true);

@@ -74,7 +74,7 @@ public class UploadSingleFileTask extends AsyncTask<Void, Integer,Void>{
                     DriveContents contents = createContentsTask.getResult();
                     OutputStream outputStream = contents.getOutputStream();
 
-                    if(mimeType=="image/jpeg") {
+                    if(mimeType.equals("image/jpeg")) {
                         ByteArrayOutputStream bitmapStream = new ByteArrayOutputStream();
                         Bitmap image = BitmapFactory.decodeFile(mFile.getAbsolutePath());
                         image.compress(Bitmap.CompressFormat.JPEG, 100, bitmapStream);

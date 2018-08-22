@@ -7,7 +7,7 @@ import java.util.List;
 
 public class MedicineSearchListViewModel extends ViewModel {
 
-    private LiveData<List<Medicine>> medicineList;
+    private final LiveData<List<Medicine>> medicineList;
 
     public MedicineSearchListViewModel(AppDatabase mDb,String search) {
         medicineList = mDb.taskDao().selectMedicineSearch(search);

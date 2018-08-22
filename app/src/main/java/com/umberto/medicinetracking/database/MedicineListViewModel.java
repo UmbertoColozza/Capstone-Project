@@ -7,7 +7,7 @@ import java.util.List;
 
 public class MedicineListViewModel extends ViewModel {
 
-    private LiveData<List<Medicine>> medicineList;
+    private final LiveData<List<Medicine>> medicineList;
 
     public MedicineListViewModel(Repository repository) {
         medicineList = repository.getAllMedicine();

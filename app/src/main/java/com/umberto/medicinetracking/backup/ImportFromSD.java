@@ -3,6 +3,9 @@ package com.umberto.medicinetracking.backup;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.text.TextUtils;
+
+import com.umberto.medicinetracking.R;
 import com.umberto.medicinetracking.database.AppDatabase;
 import com.umberto.medicinetracking.utils.ImageUtils;
 import java.io.File;
@@ -13,22 +16,23 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 //Import all file from SD card
-public class ImportFromSD extends AsyncTask<Void, Integer,Void> {
-    private Context mContext;
-    private DownloadTask.OnDownloadProgress downloadProgress;
+public class ImportFromSD extends AsyncTask<Void, Integer,String[]> {
+    private final Context mContext;
+    private final DownloadTask.OnDownloadProgress downloadProgress;
     public ImportFromSD(Context context, DownloadTask.OnDownloadProgress onDowload){
         mContext=context;
         downloadProgress=onDowload;
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected String[] doInBackground(Void... voids) {
         //If SD not installed finish import
         if(!SdIsPresent()){
-            return null;
+            String[] messages = {mContext.getString(R.string.error_sd_not_exist), mContext.getString(R.string.error_sd_not_exist)};
+            return messages;
         }
         File[] files= ImageUtils.getListImage(mContext);
-        File[] filesSd=null;
+        File[] filesSd;
         boolean existDir=true;
         File storageDir = new File(Environment.getExternalStorageDirectory() + "/MedicineTracking");
         boolean success = true;
@@ -63,6 +67,8 @@ public class ImportFromSD extends AsyncTask<Void, Integer,Void> {
                         importFile(fileSd, true);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        String[] messages = {mContext.getString(R.string.error_file_copy), fileSd.getAbsolutePath()+"\n"+e.getMessage()};
+                        return messages;
                     }
                     break;
                 } else {
@@ -70,6 +76,8 @@ public class ImportFromSD extends AsyncTask<Void, Integer,Void> {
                         importFile(fileSd, false);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        String[] messages = {mContext.getString(R.string.error_file_copy), fileSd.getAbsolutePath()+"\n"+e.getMessage()};
+                        return messages;
                     }
                 }
             }
@@ -104,14 +112,18 @@ public class ImportFromSD extends AsyncTask<Void, Integer,Void> {
         }
     }
 
-    public static boolean SdIsPresent() {
+    private static boolean SdIsPresent() {
         return Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED);
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        downloadProgress.onFinishDownload();
+    protected void onPostExecute(String[] messages) {
+        super.onPostExecute(messages);
+        if(messages==null) {
+            downloadProgress.onFinishDownload(true,"","");
+        } else {
+            downloadProgress.onFinishDownload(false,messages[0],messages[1]);
+        }
     }
 }

@@ -10,7 +10,7 @@ public class Repository {
         void insertCallback(long id);
     }
     private InsertCallback callback;
-    private Context mContext;
+    private final Context mContext;
     private static AppDatabase appDatabase;
 
     public Repository(Context context){
@@ -52,17 +52,14 @@ public class Repository {
 
     public void insertUpdateMedicine(Medicine medicine, InsertCallback callback){
         this.callback=callback;
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                if(medicine.getId()==0) {
-                    long id=getTaskDAO().insertMedicine(medicine);
-                    if(callback!=null){
-                        callback.insertCallback(id);
-                    }
-                } else {
-                    getTaskDAO().updateMedicine(medicine);
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            if(medicine.getId()==0) {
+                long id=getTaskDAO().insertMedicine(medicine);
+                if(callback!=null){
+                    callback.insertCallback(id);
                 }
+            } else {
+                getTaskDAO().updateMedicine(medicine);
             }
         });
     }
@@ -70,32 +67,19 @@ public class Repository {
     //PHOTO
     public void updatePhotoMedicine(int medicineId, String fileName){
         this.callback=callback;
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                    getTaskDAO().updateMedicineFileName(fileName, medicineId);
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() -> getTaskDAO().updateMedicineFileName(fileName, medicineId));
     }
     public void deleteMedicine(Medicine medicine){
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                getTaskDAO().deleteMedicine(medicine);
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() -> getTaskDAO().deleteMedicine(medicine));
     }
 
     public void insertUpdatePhoto(Photo photo){
         this.callback=callback;
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                if(photo.getId()==0) {
-                    getTaskDAO().insertPhoto(photo);
-                } else {
-                    getTaskDAO().updatePhoto(photo);
-                }
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            if(photo.getId()==0) {
+                getTaskDAO().insertPhoto(photo);
+            } else {
+                getTaskDAO().updatePhoto(photo);
             }
         });
     }
@@ -105,20 +89,10 @@ public class Repository {
     }
 
     public void deletePhoto(Photo photo){
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                getTaskDAO().deletePhoto(photo);
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() -> getTaskDAO().deletePhoto(photo));
     }
 
     public void deletePhotoByMedicineId(int medicineId){
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                getTaskDAO().deletePhotoByMedicineId(medicineId);
-            }
-        });
+        AppExecutors.getInstance().diskIO().execute(() -> getTaskDAO().deletePhotoByMedicineId(medicineId));
     }
 }

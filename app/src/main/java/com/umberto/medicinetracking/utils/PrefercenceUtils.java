@@ -10,8 +10,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class PrefercenceUtils {
-    public static final String WIDGET_MEDICINE_KEY="widget_medicine_key";
-    public static final String MEDICINE_CHENGED_KEY="medicine_changed";
+    private static final String WIDGET_MEDICINE_KEY="widget_medicine_key";
+    private static final String MEDICINE_CHENGED_KEY="medicine_changed";
 
     //Get if Remote Backup is enabled or disabled
     public static boolean getBackupRemote(Context context){

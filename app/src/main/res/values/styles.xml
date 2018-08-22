@@ -8,11 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
-
-    <style name="MySearchView" parent="Widget.AppCompat.SearchView">
-        <item name="queryBackground">@android:color/white</item>
-        <item name="submitBackground">@android:color/white</item>
-    </style>
     <style name="MedicineThemeToolbar" parent="Theme.AppCompat.NoActionBar">
         <item name="android:textColorPrimary">@color/toolbar_text_color_light</item>
     </style>

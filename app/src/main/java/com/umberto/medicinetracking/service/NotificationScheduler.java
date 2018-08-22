@@ -22,7 +22,6 @@ import static android.content.Context.ALARM_SERVICE;
 public class NotificationScheduler
 {
     public static final int MEDICINE_REQUEST_CODE=100;
-    public static final String TAG="NotificationScheduler";
     public static final String CHANNEL_ID="1234";
     public static final String CHANNEL_NAME="medicine";
     public static final String NOTIFICATION_TITLE="notification_title";

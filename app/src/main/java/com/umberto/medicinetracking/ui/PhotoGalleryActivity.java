@@ -29,12 +29,17 @@ public class PhotoGalleryActivity extends AppCompatActivity {
         if(savedInstanceState!=null){
             mTitle=savedInstanceState.getString(KEY_TITLE);
         }else {
-            Intent intent = getIntent();
-            if (intent != null) {
-                mMedicineId = intent.getIntExtra(KEY_PHOTO_MEDICINE_ID, -1);
-                mPosition=intent.getIntExtra(KEY_PHOTO_POSITION, 0);
-                mTitle=intent.getStringExtra(KEY_TITLE);
-
+            Bundle extras=getIntent().getExtras();
+            if (extras != null) {
+                if (extras.containsKey(KEY_PHOTO_MEDICINE_ID)) {
+                    mMedicineId = extras.getInt(KEY_PHOTO_MEDICINE_ID, -1);
+                }
+                if (extras.containsKey(KEY_PHOTO_POSITION)) {
+                    mPosition = extras.getInt(KEY_PHOTO_POSITION, 0);
+                }
+                if (extras.containsKey(KEY_PHOTO_POSITION)) {
+                    mTitle = extras.getString(KEY_PHOTO_POSITION);
+                }
                 setupPhotoGalleryFragment();
             }
         }
@@ -64,7 +69,7 @@ public class PhotoGalleryActivity extends AppCompatActivity {
     private void setupPhotoGalleryFragment(){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         PhotoGalleryFragment photoFragment=new PhotoGalleryFragment();
-        photoFragment.setData(mMedicineId,mPosition);
+        photoFragment.setData(mMedicineId);
         transaction.add(R.id.photo_gallery_frame_layout, photoFragment);
         transaction.commit();
     }

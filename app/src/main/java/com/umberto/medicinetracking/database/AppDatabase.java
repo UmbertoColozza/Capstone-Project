@@ -9,16 +9,12 @@ import android.content.Context;
 @Database(entities = {Medicine.class, Photo.class}, version = 1, exportSchema = false)
 @TypeConverters({})
 public abstract class AppDatabase extends RoomDatabase {
-
-    private static final String LOG_TAG = AppDatabase.class.getSimpleName();
     private static final Object LOCK = new Object();
     public static final String DATABASE_NAME = "medicinetracking";
     private static AppDatabase sInstance;
-    private static Context mContext;
 
     //Create instance of database if is null
     public static AppDatabase getInstance(Context context) {
-        mContext = context;
         if (sInstance == null) {
             synchronized (LOCK) {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),

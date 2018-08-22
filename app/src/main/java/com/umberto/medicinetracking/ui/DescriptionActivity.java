@@ -35,7 +35,6 @@ public class DescriptionActivity extends AppCompatActivity implements Descriptio
     @BindView(R.id.photo) ImageView mPhoto;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbar;
-    private int mMutedColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class DescriptionActivity extends AppCompatActivity implements Descriptio
 
         ButterKnife.bind(this);
 
-        mMutedColor = getResources().getColor(R.color.colorPrimary);
+        int mMutedColor = getResources().getColor(R.color.colorPrimary);
         setupActionBar();
         mCollapsingToolbar.setContentScrimColor(mMutedColor);
         mCollapsingToolbar.setStatusBarScrimColor(mMutedColor);
@@ -54,7 +53,9 @@ public class DescriptionActivity extends AppCompatActivity implements Descriptio
             mMedicineId=savedInstanceState.getInt(MEDICINE_KEY_ID);
         } else {
             Bundle bundle = getIntent().getExtras();
-            mMedicineId = getIntent().getIntExtra(MEDICINE_KEY_ID,0);
+            if(bundle!=null) {
+                mMedicineId = bundle.getInt(MEDICINE_KEY_ID, 0);
+            }
             setupDescriptionFragment();
         }
 
@@ -83,17 +84,14 @@ public class DescriptionActivity extends AppCompatActivity implements Descriptio
     private void setupViewModel(){
         MedicineViewModelFactory viewModelFactory = new MedicineViewModelFactory(mRepository, mMedicineId);
         final MedicineViewModel viewModel = ViewModelProviders.of(this, viewModelFactory).get(MedicineViewModel.class);
-        viewModel.getMedicine().observe(this, new Observer<Medicine>() {
-            @Override
-            public void onChanged(@Nullable Medicine medicine) {
-                if(medicine==null){
-                    NavUtils.navigateUpFromSameTask(DescriptionActivity.this);
-                    return;
-                }
-                mMedicine = medicine;
-
-                setContentToolbar();
+        viewModel.getMedicine().observe(this, medicine -> {
+            if(medicine==null){
+                NavUtils.navigateUpFromSameTask(DescriptionActivity.this);
+                return;
             }
+            mMedicine = medicine;
+
+            setContentToolbar();
         });
     }
 

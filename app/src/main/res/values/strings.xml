@@ -78,4 +78,15 @@
     <string name="add_symbol">+</string>
     <string name="subtract_symbol">-</string>
     <string name="close_symbol">X</string>
+
+    <string name="error_signin_failed">Google sign in failed</string>
+    <string name="signin_success">Google sign in success</string>
+    <string name="error_query_drive">Error to retrieve files from Google Drive</string>
+    <string name="error_copy_db">Failed to copy the database</string>
+    <string name="error_permission">Permission denied</string>
+    <string name="error_sd_not_exist">SD Card not exist</string>
+    <string name="error_file_exist">File already exist</string>
+    <string name="error_file_copy">The file could not be copied</string>
+    <string name="backup_succesfully">Backup successfully created</string>
+    <string name="download_succesfully">Import data successfully</string>
 </resources>

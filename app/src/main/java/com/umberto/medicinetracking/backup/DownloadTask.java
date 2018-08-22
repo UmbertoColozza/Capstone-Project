@@ -21,6 +21,7 @@ import com.google.android.gms.drive.query.SearchableField;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.umberto.medicinetracking.R;
 import com.umberto.medicinetracking.database.AppDatabase;
 import com.umberto.medicinetracking.utils.ImageUtils;
 import java.io.File;
@@ -30,16 +31,15 @@ import java.io.OutputStream;
 
 //Download all file from Google Drive to Local
 public class DownloadTask extends AsyncTask<Void, Integer,Void>{
-    private Context mContext;
+    private final Context mContext;
     private DriveResourceClient mResourceClient;
-    private GoogleSignInAccount mGoogleSignInAccount;
-    File[] mFiles;
-    int mFilePosition;
-    MetadataBuffer mMetadata;
-    private OnDownloadProgress onDowload;
+    private File[] mFiles;
+    private int mFilePosition;
+    private MetadataBuffer mMetadata;
+    private final OnDownloadProgress onDowload;
 
     public interface OnDownloadProgress {
-        void onFinishDownload();
+        void onFinishDownload(boolean success,String userMessage,String errorMessage);
     }
 
     public DownloadTask(Context contex,OnDownloadProgress onDowload){
@@ -50,7 +50,7 @@ public class DownloadTask extends AsyncTask<Void, Integer,Void>{
 
     //Get Google resource client
     private void getResourceClient(){
-        mGoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(mContext);
+        GoogleSignInAccount mGoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(mContext);
         if(mGoogleSignInAccount!=null){
             mResourceClient = Drive.getDriveResourceClient(mContext, mGoogleSignInAccount);
         }
@@ -103,16 +103,11 @@ public class DownloadTask extends AsyncTask<Void, Integer,Void>{
                         inputStream.close();
                         // [END save bitmap from stream]
                         // [START drive_android_discard_contents]
-                        Task<Void> discardTask = mResourceClient.discardContents(contents).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                mFilePosition++;
-                                downloadFile();
-                            }
+                        return mResourceClient.discardContents(contents).addOnSuccessListener(aVoid -> {
+                            mFilePosition++;
+                            downloadFile();
                         });
                         // [END drive_android_discard_contents]
-
-                        return discardTask;
                     })
                     .addOnFailureListener(e -> {
                         // Handle failure
@@ -141,7 +136,7 @@ public class DownloadTask extends AsyncTask<Void, Integer,Void>{
             }
         }
         //Finish download
-        finishDownload();
+        finishDownload(true,"","");
     }
 
     private void createDb(DriveFile file){
@@ -173,15 +168,11 @@ public class DownloadTask extends AsyncTask<Void, Integer,Void>{
                     // [END save db from stream]
                     // [END_EXCLUDE]
                     // [START drive_android_discard_contents]
-                    Task<Void> discardTask = mResourceClient.discardContents(contents).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            mFilePosition++;
-                            downloadFile();
-                        }
+                    return mResourceClient.discardContents(contents).addOnSuccessListener(aVoid -> {
+                        mFilePosition++;
+                        downloadFile();
                     });
                     // [END drive_android_discard_contents]
-                    return discardTask;
                 })
                 .addOnFailureListener(e -> {
                     mFilePosition++;
@@ -204,32 +195,26 @@ public class DownloadTask extends AsyncTask<Void, Integer,Void>{
         Task<MetadataBuffer> queryTask =
                 mResourceClient
                         .query(query)
-                        .addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
-                            @Override
-                            public void onSuccess(MetadataBuffer metadata) {
-                                //If file online exist start download else finish download
-                                if(metadata.getCount()>0){
-                                    mMetadata=metadata;
-                                    mFilePosition=0;
-                                    downloadFile();
-                                } else {
-                                    finishDownload();
-                                }
+                        .addOnSuccessListener(metadata -> {
+                            //If file online exist start download else finish download
+                            if(metadata.getCount()>0){
+                                mMetadata=metadata;
+                                mFilePosition=0;
+                                downloadFile();
+                            } else {
+                                finishDownload(true,"","");
                             }
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                //Finish download
-                                finishDownload();
-                            }
+                        .addOnFailureListener(e -> {
+                            //Finish download
+                            finishDownload(false,mContext.getString(R.string.error_query_drive),e.getMessage());
                         });
         return null;
     }
 
-    private void finishDownload(){
+    private void finishDownload(boolean success,String userMessage,String errorMessage){
         if(onDowload!=null){
-            onDowload.onFinishDownload();
+            onDowload.onFinishDownload(success,userMessage,errorMessage);
         }
     }
     @Override

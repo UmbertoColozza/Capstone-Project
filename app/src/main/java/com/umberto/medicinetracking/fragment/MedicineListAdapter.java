@@ -21,9 +21,9 @@ import com.umberto.medicinetracking.utils.PrefercenceUtils;
 import java.util.List;
 
 public class MedicineListAdapter extends RecyclerView.Adapter<MedicineListAdapter.MedicineAdapterViewHolder> {
-    private ListFragment.OnItemListClickListener itemClickListener;
-    private List<Medicine> mMedicineList;
-    private Context mContext;
+    private final ListFragment.OnItemListClickListener itemClickListener;
+    private final List<Medicine> mMedicineList;
+    private final Context mContext;
     private Repository mRepository;
 
     public MedicineListAdapter(Context context, List<Medicine> medicineList, ListFragment.OnItemListClickListener itemClickListener){
@@ -72,12 +72,12 @@ public class MedicineListAdapter extends RecyclerView.Adapter<MedicineListAdapte
     }
 
     class MedicineAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView tvMedicineName;
-        TextView tvMedicineExpire;
-        TextView tvQuantity;
+        final TextView tvMedicineName;
+        final TextView tvMedicineExpire;
+        final TextView tvQuantity;
         ImageView ivCover;
-        Button buttonAdd;
-        Button buttonSubtract;
+        final Button buttonAdd;
+        final Button buttonSubtract;
         MedicineAdapterViewHolder(View view) {
             super(view);
             if(PrefercenceUtils.showGrid(mContext)){

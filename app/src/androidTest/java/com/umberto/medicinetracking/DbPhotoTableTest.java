@@ -28,12 +28,12 @@ public class DbPhotoTableTest {
     }
 
     @After
-    public void closeDb() throws IOException {
+    public void closeDb() {
         mDb.close();
     }
 
     @Test
-    public void writeUserAndReadInList() throws Exception {
+    public void writeUserAndReadInList() {
         Photo photo=new Photo();
         photo.setMedicineId(1);
         photo.setCreatedDate(new Date());

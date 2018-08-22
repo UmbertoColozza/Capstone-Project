@@ -4,12 +4,14 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+
+import com.umberto.medicinetracking.backup.OnUploadProgress;
 import com.umberto.medicinetracking.database.AppDatabase;
 import com.umberto.medicinetracking.backup.UploadSingleFileTask;
 import com.umberto.medicinetracking.backup.UploadTask;
 import com.umberto.medicinetracking.backup.ExportToSD;
 
-public class UploadService extends IntentService implements UploadTask.OnUploadProgress{
+public class UploadService extends IntentService implements OnUploadProgress {
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -21,16 +23,6 @@ public class UploadService extends IntentService implements UploadTask.OnUploadP
 
     public UploadService(){
         super("UploadService");
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -61,7 +53,7 @@ public class UploadService extends IntentService implements UploadTask.OnUploadP
     }
 
     @Override
-    public void onFinishUpload() {
+    public void onFinishUpload(boolean success,String userMessage,String errorMessage) {
 
         this.stopSelf();
     }

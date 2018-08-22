@@ -3,36 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
 
-    <include layout="@layout/toolbar_layout"/>
-    <fragment
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.SettingsActivity"
-        android:id="@+id/medicine_settings"
-        android:name="com.umberto.medicinetracking.fragment.SettingsFragment"
-        />
-</LinearLayout>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="@color/transparent"
-android:gravity="center"
-    android:visibility="gone"
-    android:id="@+id/layout_progress"
-android:orientation="vertical" >
+        android:orientation="vertical">
 
-<ProgressBar
-    android:id="@+id/progressBar1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="@android:color/transparent" />
+        <include layout="@layout/toolbar_layout" />
 
-</LinearLayout>
+        <fragment
+            android:id="@+id/medicine_settings"
+            android:name="com.umberto.medicinetracking.fragment.SettingsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.SettingsActivity" />
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent" />
+
+    </LinearLayout>
 </RelativeLayout>

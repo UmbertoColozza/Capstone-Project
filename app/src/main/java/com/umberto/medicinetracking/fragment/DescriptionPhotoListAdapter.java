@@ -19,8 +19,8 @@ import butterknife.ButterKnife;
 //Setup photo list adapter for recyclerview in fragment description
 public class DescriptionPhotoListAdapter extends RecyclerView.Adapter<DescriptionPhotoListAdapter.DescriptionPhotoListAdapterViewHolder> {
     private List<Photo> mPhotoList;
-    private Context mContext;
-    private DescriptionFragment.OnItemDescriptionClickListener itemClickListener;
+    private final Context mContext;
+    private final DescriptionFragment.OnItemDescriptionClickListener itemClickListener;
 
 
     public DescriptionPhotoListAdapter(Context context, DescriptionFragment.OnItemDescriptionClickListener itemClickListener){

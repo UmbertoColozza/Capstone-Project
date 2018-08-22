@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.umberto.medicinetracking.R;
 import com.umberto.medicinetracking.database.AppDatabase;
 import com.umberto.medicinetracking.utils.ImageUtils;
 import java.io.ByteArrayOutputStream;
@@ -35,18 +37,14 @@ import java.io.OutputStream;
 
 //Export all file to Google Drive
 public class UploadTask extends AsyncTask<Void, Integer,Void>{
-    public interface OnUploadProgress {
-        void onFinishUpload();
-    }
-    private Context mContext;
+    private final Context mContext;
     private DriveResourceClient mResourceClient;
-    private GoogleSignInAccount mGoogleSignInAccount;
-    File[] mFiles;
-    int mFilePosition;
-    MetadataBuffer mMetadata;
-    int mFileDelIndex;
+    private File[] mFiles;
+    private int mFilePosition;
+    private MetadataBuffer mMetadata;
+    private int mFileDelIndex;
 
-    private OnUploadProgress onProgress;
+    private final OnUploadProgress onProgress;
     //private DriveClient mDriveClient;
     public UploadTask(Context contex, OnUploadProgress onProgress){
         mContext=contex;
@@ -55,10 +53,9 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
     }
 
     private void getResourceClient(){
-        mGoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(mContext);
+        GoogleSignInAccount mGoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(mContext);
         if(mGoogleSignInAccount!=null){
             mResourceClient = Drive.getDriveResourceClient(mContext, mGoogleSignInAccount);
-            //mDriveClient=Drive.getDriveClient(mContext, mGoogleSignInAccount);
         }
     }
 
@@ -70,7 +67,7 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
         return GoogleSignIn.getClient(mContext, signInOptions);
     }
 
-    public void uploadFile(){
+    private void uploadFile(){
         if(mFilePosition>=mFiles.length){
             uploadDb();
             return;
@@ -101,6 +98,7 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
                             try {
                                 outputStream.write(bitmapStream.toByteArray());
                             } catch (IOException e1) {
+                                e1.printStackTrace();
                             }
                         } else {
                             try {
@@ -122,13 +120,10 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
                                 .build();
 
                         return mResourceClient.createFile(parent, changeSet, contents);
-                    }).addOnSuccessListener(new OnSuccessListener<DriveFile>() {
-                @Override
-                public void onSuccess(DriveFile driveFile) {
-                    mFilePosition++;
-                    uploadFile();
-                }
-            })
+                    }).addOnSuccessListener(driveFile -> {
+                        mFilePosition++;
+                        uploadFile();
+                    })
                     .addOnFailureListener(e -> {
                         mFilePosition++;
                         uploadFile();
@@ -139,10 +134,10 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
         }
     }
 
-    public void uploadDb(){
+    private void uploadDb(){
         File fileDb=mContext.getDatabasePath(AppDatabase.DATABASE_NAME);
         if(fileDb==null){
-            finishUpload();
+            finishUpload(false,mContext.getString(R.string.error_copy_db),mContext.getString(R.string.error_copy_db));
             return;
         }
         final Task<DriveFolder> appFolderTask = mResourceClient.getAppFolder();
@@ -171,15 +166,8 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
                             .build();
 
                     return mResourceClient.createFile(parent, changeSet, contents);
-                }).addOnSuccessListener(new OnSuccessListener<DriveFile>() {
-                    @Override
-                    public void onSuccess(DriveFile driveFile) {
-                        finishUpload();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    finishUpload();
-                }); //Wait to finish thread
+                }).addOnSuccessListener(driveFile -> finishUpload(true,"",""))
+                .addOnFailureListener(e -> finishUpload(false,mContext.getString(R.string.error_copy_db),e.getMessage())); //Wait to finish thread
     }
 
     private void deleteFile(){
@@ -198,27 +186,21 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
         }
         if(!found){
             mResourceClient.delete(mMetadata.get(mFileDelIndex).getDriveId().asDriveFile())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    mFileDelIndex++;
-                    deleteFile();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    mFileDelIndex++;
-                    deleteFile();
-                }
-            });
+                    .addOnSuccessListener(aVoid -> {
+                        mFileDelIndex++;
+                        deleteFile();
+                    }).addOnFailureListener(e -> {
+                        mFileDelIndex++;
+                        deleteFile();
+                    });
         } else {
             mFileDelIndex++;
             deleteFile();
         }
     }
-    private void finishUpload(){
+    private void finishUpload(boolean success,String userMessage, String errorMessage){
         if(onProgress!=null){
-            onProgress.onFinishUpload();
+            onProgress.onFinishUpload(success,userMessage,errorMessage);
         }
     }
     @Override
@@ -227,38 +209,31 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
         mFiles = ImageUtils.getListImage(mContext);
 
         if(mFiles==null || mFiles.length==0){
-            finishUpload();
+            finishUpload(true,"","");
             return null;
         }
 
         if(mResourceClient==null){
-            finishUpload();
+            finishUpload(false,mContext.getString(R.string.error_signin_failed),mContext.getString(R.string.error_signin_failed));
             return null;
         }
         Query query = new Query.Builder()
                 .addFilter(Filters.or(Filters.eq(SearchableField.MIME_TYPE, "image/jpeg"),Filters.eq(SearchableField.MIME_TYPE, "application/x-sqlite3")))
                 .build();
         // [END drive_android_query_title]
-                mResourceClient
+        mResourceClient
                         .query(query)
-                        .addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
-                            @Override
-                            public void onSuccess(MetadataBuffer metadata) {
-                                mMetadata=metadata;
-                                mFilePosition=0;
-                                mFileDelIndex=0;
-                                //Remove file old
-                                deleteFile();
-                            }
+                        .addOnSuccessListener(metadata -> {
+                            mMetadata=metadata;
+                            mFilePosition=0;
+                            mFileDelIndex=0;
+                            //Remove file old
+                            deleteFile();
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                e.printStackTrace();
-                                finishUpload();
-                            }
+                        .addOnFailureListener(e -> {
+                            e.printStackTrace();
+                            finishUpload(false,mContext.getString(R.string.error_query_drive), e.toString());
                         });
-
         return null;
     }
 
@@ -273,7 +248,7 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
     }
 
     // url = file path or whatever suitable URL you want.
-    public static String getMimeType(String filePath) {
+    private static String getMimeType(String filePath) {
         String type = null;
         String extension = MimeTypeMap.getFileExtensionFromUrl(filePath);
         if (extension != null) {
@@ -282,4 +257,3 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
         return type;
     }
 }
-

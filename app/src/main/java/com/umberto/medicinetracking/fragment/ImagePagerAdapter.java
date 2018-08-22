@@ -20,8 +20,8 @@ import java.util.List;
 
 //Photo Gallery Adapter
 public class ImagePagerAdapter extends PagerAdapter {
-    List<Photo> mImageList;
-    Activity mActivity;
+    private final List<Photo> mImageList;
+    private final Activity mActivity;
 
     public ImagePagerAdapter(Activity activity, List<Photo> imageList){
         mImageList = imageList;
@@ -44,7 +44,7 @@ public class ImagePagerAdapter extends PagerAdapter {
         //Get LayoutInflater
         LayoutInflater inflater=(LayoutInflater)container.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.image_page, container,false);
-        ImageView iv = (ImageView)view.findViewById(R.id.imageview_page);
+        ImageView iv = view.findViewById(R.id.imageview_page);
         DisplayMetrics dm=new DisplayMetrics();
         mActivity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         int height = dm.heightPixels;
@@ -70,7 +70,7 @@ public class ImagePagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
+    public void destroyItem(@NonNull ViewGroup container, int position, Object object) {
         container.removeView((View) object);
     }
 }

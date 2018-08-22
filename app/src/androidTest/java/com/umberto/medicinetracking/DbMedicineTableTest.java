@@ -28,12 +28,12 @@ public class DbMedicineTableTest {
     }
 
     @After
-    public void closeDb() throws IOException {
+    public void closeDb() {
         mDb.close();
     }
 
     @Test
-    public void writeUserAndReadInList() throws Exception {
+    public void writeUserAndReadInList() {
         Medicine medicine=new Medicine();
         medicine.setTitle("Test");
         medicine.setFileName("Test");

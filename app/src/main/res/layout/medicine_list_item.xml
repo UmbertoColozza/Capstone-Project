@@ -7,75 +7,78 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:selectableItemBackground">
-<LinearLayout
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/list_item_margin_top"
-    android:layout_height="wrap_content">
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tvListMedicineName"
-        style="?android:attr/textAppearanceMedium"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:textStyle="bold"
-        android:textColor="@color/textPrimaryColor"
-        />
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/list_item_margin_text_top"
-        android:layout_marginBottom="@dimen/list_item_margin_text_bottom">
+        android:layout_marginTop="@dimen/list_item_margin_top"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvListMedicineExpire"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/tvListMedicineName"
             style="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:textAlignment="center"
-            android:text="@string/expire_date"
-            android:textColor="@color/textSecondaryColor"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textColor="@color/textPrimaryColor"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvListDateMedicineExpire"
-            android:layout_width="wrap_content"
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@+id/tvListMedicineExpire" />
+            android:layout_marginBottom="@dimen/list_item_margin_text_bottom"
+            android:layout_marginTop="@dimen/list_item_margin_text_top">
 
-        <Button
-            android:id="@+id/listButtonAdd"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/roundedbutton"
-            android:text="@string/add_symbol"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <TextView
+                android:id="@+id/tvListMedicineExpire"
+                style="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/expire_date"
+                android:textAlignment="center"
+                android:textColor="@color/textSecondaryColor"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/tvListQuantity"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            style="?android:attr/textAppearanceMedium"
-            app:layout_constraintEnd_toStartOf="@+id/listButtonAdd" />
+            <TextView
+                android:id="@+id/tvListDateMedicineExpire"
+                style="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toEndOf="@+id/tvListMedicineExpire" />
 
-        <Button
-            android:id="@+id/listButtonSubtract"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/roundedbutton"
-            android:text="@string/subtract_symbol"
-            app:layout_constraintEnd_toStartOf="@+id/tvListQuantity" />
-    </android.support.constraint.ConstraintLayout>
-</LinearLayout>
+            <Button
+                android:id="@+id/listButtonAdd"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/roundedbutton"
+                android:text="@string/add_symbol"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/tvListQuantity"
+                style="?android:attr/textAppearanceMedium"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/listButtonAdd" />
+
+            <Button
+                android:id="@+id/listButtonSubtract"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/roundedbutton"
+                android:text="@string/subtract_symbol"
+                app:layout_constraintEnd_toStartOf="@+id/tvListQuantity" />
+        </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 </com.umberto.medicinetracking.control.SelectableCardView>

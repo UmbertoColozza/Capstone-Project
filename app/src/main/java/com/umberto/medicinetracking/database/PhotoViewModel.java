@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import java.util.List;
 
 public class PhotoViewModel extends ViewModel {
-    private LiveData<List<Photo>> photoList;
+    private final LiveData<List<Photo>> photoList;
 
     public PhotoViewModel(Repository repository, int medicineId) {
         photoList = repository.getAllPhotoByMedicine(medicineId);

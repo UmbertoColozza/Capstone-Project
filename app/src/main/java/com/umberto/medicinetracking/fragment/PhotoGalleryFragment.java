@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
@@ -27,19 +28,14 @@ import butterknife.OnClick;
 
 public class PhotoGalleryFragment extends Fragment {
     @BindView(R.id.vpphoto) ViewPager mVPPhoto;
-    ImagePagerAdapter imagePagerAdapter;
+    private ImagePagerAdapter imagePagerAdapter;
     private int mMedicineId;
-    private int mPosition;
-    List<Photo> mListPhoto;
+    private List<Photo> mListPhoto;
     private Repository mRepository;
-
-    // Empty constructor
-    public PhotoGalleryFragment(){
-    }
 
     // Inflates the photo pager
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_photo_gallery, container, false);
         ButterKnife.bind(this, rootView);
@@ -69,32 +65,27 @@ public class PhotoGalleryFragment extends Fragment {
         builder.setTitle(getString(R.string.alert_confirm_title));
         builder.setMessage(getString(R.string.alert_confirm_message));
 
-        builder.setPositiveButton(getString(R.string.alert_confirm_positive), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                mRepository.deletePhoto(photo);
-                File deleteFile=ImageUtils.getFile(getContext(), photo.getFileName());
-                ImageUtils.deleteImageFile(getContext(), deleteFile.getAbsolutePath());
-                //if is first photo update cover photo in medicine
-                if(currentPage==0){
-                    String nextFileName="";
-                    if(mListPhoto.size()>1){
-                        nextFileName= mListPhoto.get(currentPage+1).getFileName();
-                        mRepository.updatePhotoMedicine(photo.getMedicineId(), nextFileName);
-                    } else {
-                        mRepository.updatePhotoMedicine(photo.getMedicineId(), "");
-                    }
+        builder.setPositiveButton(getString(R.string.alert_confirm_positive), (dialog, which) -> {
+            mRepository.deletePhoto(photo);
+            File deleteFile=ImageUtils.getFile(getContext(), photo.getFileName());
+            ImageUtils.deleteImageFile(getContext(), deleteFile.getAbsolutePath());
+            //if is first photo update cover photo in medicine
+            if(currentPage==0){
+                String nextFileName="";
+                if(mListPhoto.size()>1){
+                    nextFileName= mListPhoto.get(currentPage+1).getFileName();
                     mRepository.updatePhotoMedicine(photo.getMedicineId(), nextFileName);
+                } else {
+                    mRepository.updatePhotoMedicine(photo.getMedicineId(), "");
                 }
-                dialog.dismiss();
+                mRepository.updatePhotoMedicine(photo.getMedicineId(), nextFileName);
             }
+            dialog.dismiss();
         });
 
-        builder.setNegativeButton(getString(R.string.alert_confirm_negative), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-                dialog.dismiss();
-            }
+        builder.setNegativeButton(getString(R.string.alert_confirm_negative), (dialog, which) -> {
+            // Do nothing
+            dialog.dismiss();
         });
 
         AlertDialog alert = builder.create();
@@ -106,20 +97,16 @@ public class PhotoGalleryFragment extends Fragment {
         if(mMedicineId!=-1) {
             PhotoViewModelFactory viewModelFactory = new PhotoViewModelFactory(mRepository, mMedicineId);
             final PhotoViewModel viewModel = ViewModelProviders.of(this, viewModelFactory).get(PhotoViewModel.class);
-            viewModel.getPhotoList().observe(this, new Observer<List<Photo>>() {
-                @Override
-                public void onChanged(@Nullable List<Photo> photos) {
-                    mListPhoto=photos;
-                    imagePagerAdapter = new ImagePagerAdapter(getActivity(),photos);
-                    mVPPhoto.setAdapter(imagePagerAdapter);
-                }
+            viewModel.getPhotoList().observe(this, photos -> {
+                mListPhoto=photos;
+                imagePagerAdapter = new ImagePagerAdapter(getActivity(),photos);
+                mVPPhoto.setAdapter(imagePagerAdapter);
             });
         }
     }
 
     //Set medicine id and photo position clicked
-    public void setData(int medicineId, int position){
+    public void setData(int medicineId){
         mMedicineId=medicineId;
-        mPosition=position;
     }
 }

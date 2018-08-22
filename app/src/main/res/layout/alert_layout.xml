@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_margin="@dimen/body_margin"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textSize="@dimen/font_title_message_size"
-    android:textColor="@color/textPrimaryColor"
-    android:text="@string/alert_dialog_title" />
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/alert_dialog_title"
+        android:textColor="@color/textPrimaryColor"
+        android:textSize="@dimen/font_title_message_size" />
+
     <TextView
         android:id="@+id/textview_medicine_title_alert"
         android:layout_width="match_parent"
-        android:textSize="@dimen/font_title_size"
+        android:layout_height="wrap_content"
         android:padding="@dimen/text_padding"
-        android:layout_height="wrap_content" />
-<TextView
-    android:id="@+id/textview_expire_date_alert"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textColor="@color/textSecondaryColor"
+        android:textSize="@dimen/font_title_size" />
 
-    android:padding="@dimen/text_padding" />
+    <TextView
+        android:id="@+id/textview_expire_date_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/text_padding"
+
+        android:textColor="@color/textSecondaryColor" />
+
     <ImageView
         android:id="@+id/dialog_imageview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
         android:layout_gravity="center"
+        android:adjustViewBounds="true"
         android:contentDescription="@string/content_description_image_alert"
         android:scaleType="fitStart"
-        android:src="@drawable/placeholder"/>
+        android:src="@drawable/placeholder" />
 </LinearLayout>

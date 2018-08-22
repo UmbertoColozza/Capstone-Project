@@ -13,13 +13,12 @@ import com.umberto.medicinetracking.utils.PrefercenceUtils;
 import java.util.List;
 
 public class MedicineDataProvider implements RemoteViewsService.RemoteViewsFactory {
-    private Context mContext;
+    private final Context mContext;
     private List<Medicine> listMedicine;
-    private int appWidgetId;
 
     public MedicineDataProvider(Context context, Intent intent) {
         mContext = context;
-        appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+        int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
     }
 
@@ -40,7 +39,7 @@ public class MedicineDataProvider implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public int getCount() {
-        return(listMedicine.size());
+        return ( listMedicine == null ? 0 : listMedicine.size());
     }
 
     @Override

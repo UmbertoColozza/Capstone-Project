@@ -7,8 +7,8 @@ import android.arch.lifecycle.LiveData;
 import java.util.List;
 
 public class MedicineExpiringViewModel extends AndroidViewModel {
-    private Repository mRepository;
-    private LiveData<List<Medicine>> medicine;
+    private final Repository mRepository;
+    private final LiveData<List<Medicine>> medicine;
 
     public MedicineExpiringViewModel(Application application) {
         super(application);

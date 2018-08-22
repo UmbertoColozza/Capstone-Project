@@ -7,28 +7,43 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v14.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.umberto.medicinetracking.R;
 import com.umberto.medicinetracking.utils.NetworkUtils;
 import com.umberto.medicinetracking.utils.PrefercenceUtils;
 
+import java.util.concurrent.Executor;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements
         OnSharedPreferenceChangeListener {
     private static final int REQUEST_CODE_SIGN_IN = 0;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
+    private FirebaseAuth mAuth;
+
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -39,9 +54,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         PreferenceScreen prefScreen = getPreferenceScreen();
         int count = prefScreen.getPreferenceCount();
 
+        mAuth = FirebaseAuth.getInstance();
         //Set current account name in preference summary
         Preference p=prefScreen.findPreference(getString(R.string.pref_backup_account_key));
-        if(p.getKey()==getString(R.string.pref_backup_account_key)){
+        if(p.getKey().equals(getString(R.string.pref_backup_account_key))){
             if (NetworkUtils.isSignedIn(getContext())) {
                 p.setSummary(NetworkUtils.accountDisplayName(getContext()));
             } else {
@@ -58,7 +74,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             setChecked(preference, sharedPreferences.getBoolean(preference.getKey(), false));
         }
 
-        if(key==getString(R.string.pref_backup_sync_key)){
+        if(key.equals(getString(R.string.pref_backup_sync_key))){
             boolean value = sharedPreferences.getBoolean(preference.getKey(), false);
             if(value && !PrefercenceUtils.getBackupRemote(getContext())){
                 if (ContextCompat.checkSelfPermission(getContext(),
@@ -71,7 +87,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 }
             }
         }
-        if(key==getString(R.string.pref_backup_remote_key)){
+        if(key.equals(getString(R.string.pref_backup_remote_key))){
             boolean value = sharedPreferences.getBoolean(preference.getKey(), false);
             if(value){
                 GoogleSignInClient googleSignInClient = buildGoogleSignInClient();
@@ -90,7 +106,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             sp.setChecked(checked);
         }
     }
-
 
     /**
      * Updates the summary for the preference
@@ -120,11 +135,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     }
 
     @Override
-    public boolean onPreferenceTreeClick(Preference preference) {
-        return super.onPreferenceTreeClick(preference);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPreferenceScreen().getSharedPreferences()
@@ -139,8 +149,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     }
 
     private GoogleSignInClient buildGoogleSignInClient() {
+        // AIzaSyDea_WScq1VV_XYLl8RZGOIKn9_sg2EYuE
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
                         .requestScopes(Drive.SCOPE_APPFOLDER,Drive.SCOPE_FILE)
                         .build();
         return GoogleSignIn.getClient(getContext(), signInOptions);
@@ -151,16 +163,25 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==REQUEST_CODE_SIGN_IN){
-            if(resultCode == Activity.RESULT_OK){
-                PrefercenceUtils.setBackupAccount(getContext(),true);
-                setPreferenceSummary(getString(R.string.pref_backup_account_key), NetworkUtils.accountDisplayName(getContext()));
-            } else {
-                //Signed in wrong return preference checked false
-                PrefercenceUtils.setBackupRemote(getContext(), false);
-                PrefercenceUtils.setBackupRemote(getContext(), false);
+            if(resultCode == Activity.RESULT_OK) {
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                try {
+                    // Google Sign In was successful, authenticate with Firebase
+                    GoogleSignInAccount account = task.getResult(ApiException.class);
+                    PrefercenceUtils.setBackupAccount(getContext(), true);
+                    setPreferenceSummary(getString(R.string.pref_backup_account_key), NetworkUtils.accountDisplayName(getContext()));
+                    Toast.makeText(getContext(), R.string.signin_success, Toast.LENGTH_LONG).show();
+                } catch (ApiException e) {
+                    // Google Sign In failed, update UI appropriately
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), R.string.error_signin_failed, Toast.LENGTH_LONG).show();
+                    PrefercenceUtils.setBackupAccount(getContext(),true);
+                    setPreferenceSummary(getString(R.string.pref_backup_account_key), NetworkUtils.accountDisplayName(getContext()));
+                }
+                return;
             }
-        } else if(requestCode==REQUEST_STORAGE_PERMISSION){
-
+            PrefercenceUtils.setBackupAccount(getContext(),true);
+            setPreferenceSummary(getString(R.string.pref_backup_account_key), NetworkUtils.accountDisplayName(getContext()));
         }
     }
 
@@ -179,8 +200,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         }
     }
 
-    //Signout of Google account
+    //Signout of Google account and Firebase
     private void signOut(){
+        FirebaseAuth.getInstance().signOut();
+
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestScopes(Drive.SCOPE_APPFOLDER)
@@ -188,14 +211,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         GoogleSignInClient sClient=buildGoogleSignInClient();
 
         if(sClient!=null) {
-            sClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            setPreferenceSummary(getString(R.string.pref_backup_account_key), "");
-                            PrefercenceUtils.setBackupAccount(getContext(), false);
-                            PrefercenceUtils.setBackupRemote(getContext(), false);
-                        }
-                    });
+            sClient.signOut().addOnCompleteListener(task -> {
+                setPreferenceSummary(getString(R.string.pref_backup_account_key), "");
+                PrefercenceUtils.setBackupAccount(getContext(), false);
+                PrefercenceUtils.setBackupRemote(getContext(), false);
+            });
         }
     }
 }

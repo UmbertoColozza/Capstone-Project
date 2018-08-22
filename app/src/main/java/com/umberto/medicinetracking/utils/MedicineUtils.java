@@ -1,5 +1,9 @@
 package com.umberto.medicinetracking.utils;
 
+import android.content.Context;
+
+import com.umberto.medicinetracking.widget.MedicineWidget;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,5 +48,13 @@ public class MedicineUtils {
         e.printStackTrace();
         return "0";
     }
+    }
+
+    public static void updateWidget(final Context context){
+            new Thread() {
+                public void run() {
+                    MedicineWidget.sendRefreshBroadcast(context);
+                }
+            }.start();
     }
 }

@@ -24,6 +24,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.umberto.medicinetracking.R;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,16 +34,15 @@ import java.io.OutputStream;
 
 //Export single file to Google Drive. This is used when preference Change only is selected
 public class UploadSingleFileTask extends AsyncTask<Void, Integer,Void>{
-    private Context mContext;
+    private final Context mContext;
     private DriveResourceClient mResourceClient;
-    private GoogleSignInAccount mGoogleSignInAccount;
-    private File mFile;
-    private String mimeType;
+    private final File mFile;
+    private final String mimeType;
     private MetadataBuffer mMetadata;
-    private UploadTask.OnUploadProgress onUploadProgress;
-    private boolean overWrite;
+    private final OnUploadProgress onUploadProgress;
+    private final boolean overWrite;
 
-    public UploadSingleFileTask(Context contex, File file, boolean overWrite,UploadTask.OnUploadProgress onUploadProgress){
+    public UploadSingleFileTask(Context contex, File file, boolean overWrite,OnUploadProgress onUploadProgress){
         mContext=contex;
         mFile=file;
         mimeType=getMimeType(file.getName());
@@ -51,7 +52,7 @@ public class UploadSingleFileTask extends AsyncTask<Void, Integer,Void>{
     }
 
     private void getResourceClient(){
-        mGoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(mContext);
+        GoogleSignInAccount mGoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(mContext);
         if(mGoogleSignInAccount!=null){
             mResourceClient = Drive.getDriveResourceClient(mContext, mGoogleSignInAccount);
         }
@@ -65,7 +66,7 @@ public class UploadSingleFileTask extends AsyncTask<Void, Integer,Void>{
         return GoogleSignIn.getClient(mContext, signInOptions);
     }
 
-    public void createFile(){
+    private void createFile(){
         final Task<DriveFolder> appFolderTask = mResourceClient.getAppFolder();
         final Task<DriveContents> createContentsTask = mResourceClient.createContents();
         Tasks.whenAll(appFolderTask, createContentsTask)
@@ -81,6 +82,7 @@ public class UploadSingleFileTask extends AsyncTask<Void, Integer,Void>{
                         try {
                             outputStream.write(bitmapStream.toByteArray());
                         } catch (IOException e1) {
+                            e1.printStackTrace();
                         }
                     } else {
                         try {
@@ -102,15 +104,8 @@ public class UploadSingleFileTask extends AsyncTask<Void, Integer,Void>{
                             .build();
 
                     return mResourceClient.createFile(parent, changeSet, contents);
-                }).addOnSuccessListener(new OnSuccessListener<DriveFile>() {
-                    @Override
-                    public void onSuccess(DriveFile driveFile) {
-                        onLoadFinish();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    onLoadFinish();
-                });
+                }).addOnSuccessListener(driveFile -> onLoadFinish(true,"",""))
+                .addOnFailureListener(e -> onLoadFinish(false,mContext.getString(R.string.error_file_copy),e.getMessage()));
     }
 
     @Override
@@ -127,39 +122,31 @@ public class UploadSingleFileTask extends AsyncTask<Void, Integer,Void>{
         Task<MetadataBuffer> queryTask =
                 mResourceClient
                         .query(query)
-                        .addOnSuccessListener(new OnSuccessListener<MetadataBuffer>() {
-                            @Override
-                            public void onSuccess(MetadataBuffer metadata) {
-                                mMetadata=metadata;
-                                    if(metadata.getCount()>0){
-                                            if(overWrite) {
-                                                mResourceClient.delete(metadata.get(0).getDriveId().asDriveFile()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        createFile();
-                                                    }
-                                                });
-                                            } else {
-                                                onLoadFinish();
-                                            }
-                                    }
-                                    else {
-                                        createFile();
-                                    }
+                        .addOnSuccessListener(metadata -> {
+                            mMetadata=metadata;
+                                if(metadata.getCount()>0){
+                                        if(overWrite) {
+                                            mResourceClient.delete(metadata.get(0).getDriveId().asDriveFile()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    createFile();
+                                                }
+                                            });
+                                        } else {
+                                            onLoadFinish(false,mContext.getString(R.string.error_file_exist),mContext.getString(R.string.error_file_exist));
+                                        }
                                 }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                onLoadFinish();
-                            }
-                        });
+                                else {
+                                    createFile();
+                                }
+                            })
+                        .addOnFailureListener(e -> onLoadFinish(false,mContext.getString(R.string.error_query_drive),mContext.getString(R.string.error_query_drive)));
         return null;
     }
 
-    private void onLoadFinish(){
+    private void onLoadFinish(boolean success,String userMessage,String errorMessage){
         if(onUploadProgress!=null) {
-            onUploadProgress.onFinishUpload();
+            onUploadProgress.onFinishUpload(success,userMessage,errorMessage);
         }
     }
     @Override
@@ -173,7 +160,7 @@ public class UploadSingleFileTask extends AsyncTask<Void, Integer,Void>{
     }
 
     // url = file path or whatever suitable URL you want.
-    public static String getMimeType(String filePath) {
+    private static String getMimeType(String filePath) {
         String type = null;
         String extension = MimeTypeMap.getFileExtensionFromUrl(filePath);
         if (extension != null) {

@@ -35,7 +35,6 @@ public class ListFragment extends Fragment implements SharedPreferences.OnShared
     @BindView(R.id.rvMedicine) RecyclerView mRecyclerViewMedicine;
     private List<Medicine> mMedicineList;
     private MedicineListAdapter medicineListAdapter;
-    private GridLayoutManager gridLayoutManager;
     private ItemTouchHelper itemTouchhelper;
     private String mSearch;
     private MedicineSearchListViewModel viewModel;
@@ -55,12 +54,9 @@ public class ListFragment extends Fragment implements SharedPreferences.OnShared
         void onItemListSelected(Medicine item);
     }
 
-    // Empty constructor
-    public ListFragment(){
-    }
     // Inflates the list medicine
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_list, container, false);
         ButterKnife.bind(this, rootView);
@@ -100,7 +96,7 @@ public class ListFragment extends Fragment implements SharedPreferences.OnShared
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText!=mSearch) {
+                if(!newText.equals(mSearch)) {
                     mSearch = newText;
                     setupViewModel();
                 }
@@ -125,16 +121,13 @@ public class ListFragment extends Fragment implements SharedPreferences.OnShared
 
     private void setupViewModel(){
         repository.getMedicineSearchList(mSearch)
-                .observe(this, new Observer<List<Medicine>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Medicine> medicines) {
-                        if (medicines == null) {
-                            return;
-                        }
-                        mMedicineList=medicines;
-                        setListFragment();
-
+                .observe(this, medicines -> {
+                    if (medicines == null) {
+                        return;
                     }
+                    mMedicineList=medicines;
+                    setListFragment();
+
                 });
     }
 
@@ -144,7 +137,7 @@ public class ListFragment extends Fragment implements SharedPreferences.OnShared
         if(PrefercenceUtils.showGrid(getContext())) {
             numberOfColumns=getResources().getInteger(R.integer.number_columns);
         }
-        gridLayoutManager = new GridLayoutManager(this.getContext(), numberOfColumns);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), numberOfColumns);
         mRecyclerViewMedicine.setLayoutManager(gridLayoutManager);
         medicineListAdapter=new MedicineListAdapter(getContext(),mMedicineList, (OnItemListClickListener) getContext());
         mRecyclerViewMedicine.setAdapter(medicineListAdapter);
@@ -180,26 +173,19 @@ public class ListFragment extends Fragment implements SharedPreferences.OnShared
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(getString(R.string.alert_confirm_title));
                 builder.setMessage(getString(R.string.alert_confirm_message));
-                builder.setPositiveButton(getString(R.string.alert_confirm_positive), new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int which) {
-                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                deleteMedicine(swipedPosition);
-                            }
-                        });
-                        dialog.dismiss();
-                    }
+                builder.setPositiveButton(getString(R.string.alert_confirm_positive), (dialog, which) -> {
+                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            deleteMedicine(swipedPosition);
+                        }
+                    });
+                    dialog.dismiss();
                 });
-                builder.setNegativeButton(getString(R.string.alert_confirm_negative), new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing
-                        medicineListAdapter.notifyDataSetChanged();
-                        dialog.dismiss();
-                    }
+                builder.setNegativeButton(getString(R.string.alert_confirm_negative), (dialog, which) -> {
+                    // Do nothing
+                    medicineListAdapter.notifyDataSetChanged();
+                    dialog.dismiss();
                 });
                 AlertDialog alert = builder.create();
                 alert.setCanceledOnTouchOutside(false);

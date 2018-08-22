@@ -18,9 +18,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EditPhotoListAdapter extends RecyclerView.Adapter<EditPhotoListAdapter.EditPhotoListAdapterViewHolder> {
-    private OnDeleteImageListener deleteClickListener;
+    private final OnDeleteImageListener deleteClickListener;
     private List<Photo> mPhotoList;
-    private Context mContext;
+    private final Context mContext;
 
     // OnDeleteImageListener interface, calls a method in the host fragment
     public interface OnDeleteImageListener {

@@ -33,10 +33,14 @@ public class EditActivity extends AppCompatActivity implements EditFragment.OnDe
             mMedicineId=savedInstanceState.getInt(KEY_MEDICINE_EDIT_ID);
             mMedicineTitle=savedInstanceState.getString(KEY_MEDICINE_EDIT_TITLE);
         }else {
-            Intent intent = getIntent();
-            if (intent != null) {
-                mMedicineId = intent.getIntExtra(KEY_MEDICINE_EDIT_ID,-1);
-                mMedicineTitle = intent.getStringExtra(KEY_MEDICINE_EDIT_TITLE);
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                if (extras.containsKey(KEY_MEDICINE_EDIT_ID)) {
+                    mMedicineId = extras.getInt(KEY_MEDICINE_EDIT_ID, -1);
+                }
+                if (extras.containsKey(KEY_MEDICINE_EDIT_TITLE)) {
+                    mMedicineTitle = extras.getString(KEY_MEDICINE_EDIT_TITLE);
+                }
                 setupEditFragment();
             }
         }

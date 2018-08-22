@@ -24,16 +24,14 @@ public class ImageUtils {
         Uri pathUri =Uri.parse(context.getFilesDir().getAbsolutePath()).buildUpon()
                 .appendPath(fileName)
                 .build();
-        File file=new File(pathUri.toString());
-        return file;
+        return new File(pathUri.toString());
     }
 
     //Get file uri
     public static Uri getPath(Context context, String fileName){
-        Uri pathUri =Uri.parse(context.getFilesDir().getAbsolutePath()).buildUpon()
+        return Uri.parse(context.getFilesDir().getAbsolutePath()).buildUpon()
                 .appendPath(fileName)
                 .build();
-        return pathUri;
     }
 
     /**
@@ -126,12 +124,7 @@ public class ImageUtils {
     //Delete all photo with medicine id "JPEG_medicineId_"
     public static void deleteAllPhotoList(Context context, int medicineId){
         File dir=new File(context.getFilesDir().getAbsolutePath());
-        FilenameFilter beginswith = new FilenameFilter()
-        {
-            public boolean accept(File directory, String filename) {
-                return filename.startsWith("JPEG_"+medicineId+"_");
-            }
-        };
+        FilenameFilter beginswith = (directory, filename) -> filename.startsWith("JPEG_"+medicineId+"_");
         for(String file : dir.list(beginswith)){
             File imageFile=new File(context.getFilesDir(),file);
             imageFile.delete();
@@ -155,13 +148,10 @@ public class ImageUtils {
         return saveImage(context, image, imageFileName);
     }
     public static String saveImage(Context context, Bitmap image,String imageFileName) {
-
-        String savedImagePath = null;
         File storageDir = new File(context.getFilesDir().getAbsolutePath());
 
         // Save the new Bitmap
             File imageFile = new File(storageDir, imageFileName);
-            savedImagePath = imageFile.getAbsolutePath();
             try {
                 OutputStream fOut = new FileOutputStream(imageFile);
                 image.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
@@ -177,7 +167,6 @@ public class ImageUtils {
 
     public static File[] getListImage(Context context){
         File directory = new File(context.getFilesDir().getAbsolutePath());
-        File[] files = directory.listFiles();
-        return files;
+        return directory.listFiles();
     }
 }

@@ -21,9 +21,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.google.android.gms.common.util.CollectionUtils;
 import com.squareup.picasso.Picasso;
 import com.umberto.medicinetracking.R;
@@ -102,12 +100,8 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
         void onDeleted();
     }
 
-    // Empty constructor
-    public EditFragment(){
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
@@ -165,14 +159,10 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
     private void setDateTimeField() {
         dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
         Calendar newCalendar = Calendar.getInstance();
-        mDatePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, monthOfYear, dayOfMonth);
-                mEditExpireData.setText(dateFormatter.format(newDate.getTime()));
-            }
-
+        mDatePickerDialog = new DatePickerDialog(getContext(), (view, year, monthOfYear, dayOfMonth) -> {
+            Calendar newDate = Calendar.getInstance();
+            newDate.set(year, monthOfYear, dayOfMonth);
+            mEditExpireData.setText(dateFormatter.format(newDate.getTime()));
         },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
@@ -288,12 +278,7 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
         builder.setTitle(getString(R.string.alert_error_title));
         builder.setMessage(R.string.alert_error_message_title);
 
-        builder.setPositiveButton(getString(R.string.alert_ok_button), new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setPositiveButton(getString(R.string.alert_ok_button), (dialog, which) -> dialog.dismiss());
 
         AlertDialog alert = builder.create();
         alert.show();
@@ -305,22 +290,15 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.alert_confirm_title));
         builder.setMessage(getString(R.string.alert_confirm_message));
-        builder.setPositiveButton(getString(R.string.alert_confirm_positive), new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int which) {
-                deleteAll();
-                dialog.dismiss();
-                // OnDeleteListener interface, calls a method in the host activity
-                deleteClickListener.onDeleted();
-            }
+        builder.setPositiveButton(getString(R.string.alert_confirm_positive), (dialog, which) -> {
+            deleteAll();
+            dialog.dismiss();
+            // OnDeleteListener interface, calls a method in the host activity
+            deleteClickListener.onDeleted();
         });
-        builder.setNegativeButton(getString(R.string.alert_confirm_negative), new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing
-                dialog.dismiss();
-            }
+        builder.setNegativeButton(getString(R.string.alert_confirm_negative), (dialog, which) -> {
+            // Do nothing
+            dialog.dismiss();
         });
         AlertDialog alert = builder.create();
         alert.show();
@@ -473,7 +451,7 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
                             addPhotoRow(fileName);
                         }
                     } catch (IOException e) {
-
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -488,16 +466,13 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
     private void setupViewModelMedicine() {
         MedicineViewModelFactory viewModelFactory = new MedicineViewModelFactory(mRepository, mMedicineId);
         MedicineViewModel viewModel = ViewModelProviders.of(this, viewModelFactory).get(MedicineViewModel.class);
-        viewModel.getMedicine().observe(this, new Observer<Medicine>() {
-            @Override
-            public void onChanged(@Nullable Medicine medicine) {
-                if(medicine==null){
-                    return;
-                }
-                    mMedicine = medicine;
-                    setText();
-                mLayoutGallery.setVisibility(View.VISIBLE);
+        viewModel.getMedicine().observe(this, medicine -> {
+            if(medicine==null){
+                return;
             }
+                mMedicine = medicine;
+                setText();
+            mLayoutGallery.setVisibility(View.VISIBLE);
         });
     }
 
@@ -505,12 +480,9 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
         if(mMedicineId!=-1) {
             PhotoViewModelFactory factory=new PhotoViewModelFactory(mRepository,mMedicineId);
             PhotoViewModel photoViewModel = ViewModelProviders.of(this, factory).get(PhotoViewModel.class);
-            photoViewModel.getPhotoList().observe(this, new Observer<List<Photo>>() {
-                @Override
-                public void onChanged(@Nullable List<Photo> photo) {
-                    photoList = photo;
-                    adapter.setPhoto(photoList);
-                }
+            photoViewModel.getPhotoList().observe(this, photo -> {
+                photoList = photo;
+                adapter.setPhoto(photoList);
             });
         }
     }

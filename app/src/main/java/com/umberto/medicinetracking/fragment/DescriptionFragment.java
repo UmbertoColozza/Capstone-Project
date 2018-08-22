@@ -42,12 +42,8 @@ public class DescriptionFragment extends Fragment {
         void onItemDescriptionSelected(int position);
     }
 
-    // Empty constructor
-    public DescriptionFragment(){
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_description, container, false);
@@ -85,24 +81,18 @@ public class DescriptionFragment extends Fragment {
     private void setupViewModelMedicine(){
         MedicineViewModelFactory viewModelFactory = new MedicineViewModelFactory(mRepository, mMedicineId);
         final MedicineViewModel viewModel = ViewModelProviders.of(this, viewModelFactory).get(MedicineViewModel.class);
-        viewModel.getMedicine().observe(this, new Observer<Medicine>() {
-            @Override
-            public void onChanged(@Nullable Medicine medicine) {
-                mMedicine = medicine;
-                setContent();
-            }
+        viewModel.getMedicine().observe(this, medicine -> {
+            mMedicine = medicine;
+            setContent();
         });
     }
     //Setup PhotoViewModel, select all photo by id of medicine
     private void setupViewModelPhoto(){
             PhotoViewModelFactory photoViewModelFactory=new PhotoViewModelFactory(mRepository,mMedicineId);
             final PhotoViewModel photoViewModel = ViewModelProviders.of(this, photoViewModelFactory).get(PhotoViewModel.class);
-            photoViewModel.getPhotoList().observe(this, new Observer<List<Photo>>() {
-                @Override
-                public void onChanged(@Nullable List<Photo> photo) {
-                    if(photo!=null) {
-                        descriptionPhotoListAdapter.setPhoto(photo);
-                    }
+            photoViewModel.getPhotoList().observe(this, photo -> {
+                if(photo!=null) {
+                    descriptionPhotoListAdapter.setPhoto(photo);
                 }
             });
     }

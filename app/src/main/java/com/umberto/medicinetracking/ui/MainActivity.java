@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,14 +60,17 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnIt
             setupListFragment();
 
             //Check if activity has been called from widgwt or notification
-            Intent intent = getIntent();
-            int notifyId=intent.getIntExtra(NotificationScheduler.NOTIFICATION_MEDICINE_ID, -100);
-            int widgetId=intent.getIntExtra("widget_item_id", -1);
-            if ( notifyId != -100) {
-                NotificationScheduler.cancelReminder(MainActivity.this);
-                showAlert(notifyId);
-            } else if(widgetId!=-1){
-                openDescriptionActivity(widgetId);
+            Bundle extras = getIntent().getExtras();
+            if(extras!=null) {
+                int notifyId=-100;
+                if(extras.containsKey(NotificationScheduler.NOTIFICATION_MEDICINE_ID)){
+                    notifyId = extras.getInt(NotificationScheduler.NOTIFICATION_MEDICINE_ID);
+                        NotificationScheduler.cancelReminder(MainActivity.this);
+                        showAlert(notifyId);
+                } else if(extras.containsKey("widget_item_id")) {
+                    int widgetId = extras.getInt("widget_item_id");
+                    openDescriptionActivity(widgetId);
+                }
             }
         }
         getExpiringMedicine();
@@ -107,21 +111,22 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnIt
     //Get list of the top 10 medicines in order are expiring. First medicine is set to alarm
     private void getExpiringMedicine(){
         final MedicineExpiringViewModel viewModel = ViewModelProviders.of(this).get(MedicineExpiringViewModel.class);
-        viewModel.getMedicine().observe(this, new Observer<List<Medicine>>() {
-            @Override
-            public void onChanged(@Nullable List<Medicine> list) {
-                if(list!=null && list.size()>0) {
-                    //Save list of expiring medicine in preference that will be used by the widget
-                    PrefercenceUtils.setWidgetMedicine(MainActivity.this,list);
-                    //Set notification for first expiring medicine
-                    Medicine medicine=list.get(0);
-                    CharSequence content = TextUtils.concat(getString(R.string.expire_date),MedicineUtils.dateToString(medicine.getExpireData()));
-                    NotificationScheduler.setReminder(MainActivity.this,medicine.getExpireData(),medicine.getTitle(), content.toString(),medicine.getId());
-                }
-                else {
-                    PrefercenceUtils.setWidgetMedicine(MainActivity.this,null);
-                }
+        viewModel.getMedicine().observe(this, list -> {
+            if(list!=null && list.size()>0) {
+                //Save list of expiring medicine in preference that will be used by the widget
+                PrefercenceUtils.setWidgetMedicine(MainActivity.this,list);
+                //Set notification for first expiring medicine
+                Medicine medicine=list.get(0);
+                CharSequence content = TextUtils.concat(getString(R.string.expire_date),MedicineUtils.dateToString(medicine.getExpireData()));
+                NotificationScheduler.setReminder(MainActivity.this,medicine.getExpireData(),medicine.getTitle(), content.toString(),medicine.getId());
             }
+            else {
+                PrefercenceUtils.setWidgetMedicine(MainActivity.this,null);
+            }
+            Log.d("Main","List "+ PrefercenceUtils.getWidgetMedicine(MainActivity.this).size());
+            //Update widget
+            Log.d("Main", "Update widget");
+            MedicineUtils.updateWidget(MainActivity.this);
         });
     }
 
@@ -129,14 +134,11 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnIt
     private void showAlert(int medicineId){
             MedicineViewModelFactory viewModelFactory = new MedicineViewModelFactory(mRepository, medicineId);
             final MedicineViewModel viewModel = ViewModelProviders.of(this, viewModelFactory).get(MedicineViewModel.class);
-            viewModel.getMedicine().observe(this, new Observer<Medicine>() {
-                @Override
-                public void onChanged(@Nullable Medicine medicine) {
-                    if(medicine!=null) {
-                        showAlert(medicine);
-                    }
-                    viewModel.getMedicine().removeObservers(MainActivity.this);
+            viewModel.getMedicine().observe(this, medicine -> {
+                if(medicine!=null) {
+                    showAlert(medicine);
                 }
+                viewModel.getMedicine().removeObservers(MainActivity.this);
             });
     }
 
@@ -157,10 +159,8 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnIt
                     .into(dialogImage);
         }
         alertadd.setView(view);
-        alertadd.setPositiveButton(R.string.btn_close_text, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dlg, int sumthin) {
+        alertadd.setPositiveButton(R.string.btn_close_text, (dlg, sumthin) -> {
 
-            }
         });
         alertadd.show();
     }

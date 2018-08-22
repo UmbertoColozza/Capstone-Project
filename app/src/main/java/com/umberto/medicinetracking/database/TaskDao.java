@@ -37,6 +37,10 @@ public interface TaskDao {
     @Query("UPDATE medicine SET file_name= :fileName WHERE id = :medicineId")
     public abstract int updateMedicineFileName(String fileName, int medicineId);
 
+    //Update show alert of medicine.
+    @Query("UPDATE medicine SET show_alert=1 WHERE id = :medicineId")
+    public abstract int updateMedicineShowAlert(int medicineId);
+
     //Delete medicine
     @Delete
     void deleteMedicine(Medicine medicineDelete);

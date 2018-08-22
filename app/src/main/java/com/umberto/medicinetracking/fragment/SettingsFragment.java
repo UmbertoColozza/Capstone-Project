@@ -7,42 +7,28 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v14.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
-import android.util.Log;
 import android.widget.Toast;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.umberto.medicinetracking.R;
 import com.umberto.medicinetracking.utils.NetworkUtils;
 import com.umberto.medicinetracking.utils.PrefercenceUtils;
-
-import java.util.concurrent.Executor;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements
         OnSharedPreferenceChangeListener {
     private static final int REQUEST_CODE_SIGN_IN = 0;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
-    private FirebaseAuth mAuth;
 
 
     @Override
@@ -50,11 +36,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         // Add visualizer preferences, defined in the XML file in res->xml->pref_visualizer
         addPreferencesFromResource(R.xml.pref_medicine);
 
-        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
         PreferenceScreen prefScreen = getPreferenceScreen();
-        int count = prefScreen.getPreferenceCount();
 
-        mAuth = FirebaseAuth.getInstance();
         //Set current account name in preference summary
         Preference p=prefScreen.findPreference(getString(R.string.pref_backup_account_key));
         if(p.getKey().equals(getString(R.string.pref_backup_account_key))){
@@ -120,20 +103,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         }
     }
 
-    /**
-     * Updates preference checked
-     *
-     * @param key The preference key to be updated
-     * @param value      The value that the preference was updated to
-     */
-    private void setPreferenceChecked(String key, boolean value) {
-        Preference preference = findPreference(key);
-        if (preference != null) {
-            SwitchPreference sw=(SwitchPreference)preference;
-            sw.setChecked(value);
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,7 +118,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     }
 
     private GoogleSignInClient buildGoogleSignInClient() {
-        // AIzaSyDea_WScq1VV_XYLl8RZGOIKn9_sg2EYuE
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.default_web_client_id))
@@ -203,11 +171,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     //Signout of Google account and Firebase
     private void signOut(){
         FirebaseAuth.getInstance().signOut();
-
-        GoogleSignInOptions signInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestScopes(Drive.SCOPE_APPFOLDER)
-                        .build();
         GoogleSignInClient sClient=buildGoogleSignInClient();
 
         if(sClient!=null) {

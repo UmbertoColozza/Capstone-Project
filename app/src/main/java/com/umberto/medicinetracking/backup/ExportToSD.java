@@ -33,12 +33,10 @@ public class ExportToSD  extends AsyncTask<Void, Integer,String[]> {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
         {
-            String[] messages={mContext.getString(R.string.error_permission),mContext.getString(R.string.error_permission)};
-            return messages;
+            return new String[]{mContext.getString(R.string.error_permission),mContext.getString(R.string.error_permission)};
         }
         if(!SdIsPresent()){
-            String[] messages={mContext.getString(R.string.error_sd_not_exist),mContext.getString(R.string.error_sd_not_exist)};
-            return messages;
+            return new String[]{mContext.getString(R.string.error_sd_not_exist),mContext.getString(R.string.error_sd_not_exist)};
         }
         AppDatabase.closeDb(mContext);
         File[] files = ImageUtils.getListImage(mContext);
@@ -81,8 +79,7 @@ public class ExportToSD  extends AsyncTask<Void, Integer,String[]> {
                         exportFile(file);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        String[] messages={mContext.getString(R.string.error_file_copy),mContext.getString(R.string.error_file_copy)};
-                        return messages;
+                        return new String[]{mContext.getString(R.string.error_file_copy),mContext.getString(R.string.error_file_copy)};
                     }
                 }
             }
@@ -91,8 +88,7 @@ public class ExportToSD  extends AsyncTask<Void, Integer,String[]> {
                 exportFile(db);
             } catch (IOException e) {
                 e.printStackTrace();
-                String[] messages={mContext.getString(R.string.error_copy_db),mContext.getString(R.string.error_copy_db)};
-                return messages;
+                return new String[]{mContext.getString(R.string.error_copy_db),mContext.getString(R.string.error_copy_db)};
             }
         return null;
     }
@@ -100,10 +96,12 @@ public class ExportToSD  extends AsyncTask<Void, Integer,String[]> {
     @Override
     protected void onPostExecute(String[] messages) {
         super.onPostExecute(messages);
-        if(messages!=null) {
-            onProgress.onFinishUpload(false,messages[0],messages[1]);
-        } else {
-            onProgress.onFinishUpload(true, "", "");
+        if(onProgress!=null) {
+            if (messages != null) {
+                onProgress.onFinishUpload(false, messages[0], messages[1]);
+            } else {
+                onProgress.onFinishUpload(true, "", "");
+            }
         }
     }
 

@@ -4,11 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
@@ -38,10 +35,6 @@ public class DownloadTask extends AsyncTask<Void, Integer,Void>{
     private MetadataBuffer mMetadata;
     private final OnDownloadProgress onDowload;
 
-    public interface OnDownloadProgress {
-        void onFinishDownload(boolean success,String userMessage,String errorMessage);
-    }
-
     public DownloadTask(Context contex,OnDownloadProgress onDowload){
         mContext=contex;
         this.onDowload=onDowload;
@@ -54,15 +47,6 @@ public class DownloadTask extends AsyncTask<Void, Integer,Void>{
         if(mGoogleSignInAccount!=null){
             mResourceClient = Drive.getDriveResourceClient(mContext, mGoogleSignInAccount);
         }
-    }
-
-    //Get google signin account
-    private GoogleSignInClient buildGoogleSignInClient() {
-        GoogleSignInOptions signInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestScopes(Drive.SCOPE_APPFOLDER)
-                        .build();
-        return GoogleSignIn.getClient(mContext, signInOptions);
     }
 
     private void downloadFile(){
@@ -183,7 +167,6 @@ public class DownloadTask extends AsyncTask<Void, Integer,Void>{
     }
     @Override
     protected Void doInBackground(Void... voids) {
-        boolean success=true;
         mFiles = ImageUtils.getListImage(mContext);
         //Close database
         AppDatabase.closeDb(mContext);
@@ -192,7 +175,6 @@ public class DownloadTask extends AsyncTask<Void, Integer,Void>{
         Query query = new Query.Builder()
                 .addFilter(Filters.or(Filters.eq(SearchableField.MIME_TYPE, "image/jpeg"),Filters.eq(SearchableField.MIME_TYPE, "application/x-sqlite3")))
                 .build();
-        Task<MetadataBuffer> queryTask =
                 mResourceClient
                         .query(query)
                         .addOnSuccessListener(metadata -> {

@@ -1,6 +1,5 @@
 package com.umberto.medicinetracking.ui;
 
-import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,6 @@ public class PhotoGalleryActivity extends AppCompatActivity {
     public static final String KEY_PHOTO_POSITION="key_position";
     public static final String KEY_TITLE="key_title";
     private int mMedicineId;
-    private int mPosition;
     private String mTitle;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -33,9 +31,6 @@ public class PhotoGalleryActivity extends AppCompatActivity {
             if (extras != null) {
                 if (extras.containsKey(KEY_PHOTO_MEDICINE_ID)) {
                     mMedicineId = extras.getInt(KEY_PHOTO_MEDICINE_ID, -1);
-                }
-                if (extras.containsKey(KEY_PHOTO_POSITION)) {
-                    mPosition = extras.getInt(KEY_PHOTO_POSITION, 0);
                 }
                 if (extras.containsKey(KEY_PHOTO_POSITION)) {
                     mTitle = extras.getString(KEY_PHOTO_POSITION);

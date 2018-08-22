@@ -1,9 +1,7 @@
 package com.umberto.medicinetracking.fragment;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,12 +15,10 @@ import com.umberto.medicinetracking.R;
 import com.umberto.medicinetracking.database.Medicine;
 import com.umberto.medicinetracking.database.MedicineViewModel;
 import com.umberto.medicinetracking.database.MedicineViewModelFactory;
-import com.umberto.medicinetracking.database.Photo;
 import com.umberto.medicinetracking.database.PhotoViewModel;
 import com.umberto.medicinetracking.database.PhotoViewModelFactory;
 import com.umberto.medicinetracking.database.Repository;
 import com.umberto.medicinetracking.utils.MedicineUtils;
-import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

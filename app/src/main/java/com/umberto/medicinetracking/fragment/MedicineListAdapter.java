@@ -100,7 +100,7 @@ public class MedicineListAdapter extends RecyclerView.Adapter<MedicineListAdapte
                 int position=getAdapterPosition();
                 final Medicine medicine=mMedicineList.get(position);
                 medicine.setQuantity(medicine.getQuantity()+1);
-                tvQuantity.setText(Integer.toString(medicine.getQuantity()));
+                tvQuantity.setText(MedicineUtils.intToString(medicine.getQuantity()));
                 mRepository.insertUpdateMedicine(medicine, null);
             });
             buttonSubtract.setOnClickListener(v -> {
@@ -110,7 +110,7 @@ public class MedicineListAdapter extends RecyclerView.Adapter<MedicineListAdapte
                 if(medicine.getQuantity()<0) {
                     medicine.setQuantity(0);
                 }
-                tvQuantity.setText(Integer.toString(medicine.getQuantity()));
+                tvQuantity.setText(MedicineUtils.intToString(medicine.getQuantity()));
                 mRepository.insertUpdateMedicine(medicine, null);
             });
         }

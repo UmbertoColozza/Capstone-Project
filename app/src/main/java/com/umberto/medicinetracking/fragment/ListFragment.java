@@ -1,12 +1,9 @@
 package com.umberto.medicinetracking.fragment;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,7 +19,6 @@ import android.view.ViewGroup;
 import com.umberto.medicinetracking.R;
 import com.umberto.medicinetracking.database.AppExecutors;
 import com.umberto.medicinetracking.database.Medicine;
-import com.umberto.medicinetracking.database.MedicineSearchListViewModel;
 import com.umberto.medicinetracking.database.Repository;
 import com.umberto.medicinetracking.utils.ImageUtils;
 import com.umberto.medicinetracking.utils.PrefercenceUtils;
@@ -37,7 +33,6 @@ public class ListFragment extends Fragment implements SharedPreferences.OnShared
     private MedicineListAdapter medicineListAdapter;
     private ItemTouchHelper itemTouchhelper;
     private String mSearch;
-    private MedicineSearchListViewModel viewModel;
     private Repository repository;
     private SearchView searchView;
     private Repository mRepository;
@@ -174,12 +169,7 @@ public class ListFragment extends Fragment implements SharedPreferences.OnShared
                 builder.setTitle(getString(R.string.alert_confirm_title));
                 builder.setMessage(getString(R.string.alert_confirm_message));
                 builder.setPositiveButton(getString(R.string.alert_confirm_positive), (dialog, which) -> {
-                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            deleteMedicine(swipedPosition);
-                        }
-                    });
+                    AppExecutors.getInstance().diskIO().execute(() -> deleteMedicine(swipedPosition));
                     dialog.dismiss();
                 });
                 builder.setNegativeButton(getString(R.string.alert_confirm_negative), (dialog, which) -> {

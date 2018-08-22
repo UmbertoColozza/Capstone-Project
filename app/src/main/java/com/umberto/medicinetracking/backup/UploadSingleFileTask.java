@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.webkit.MimeTypeMap;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -12,7 +11,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveContents;
-import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.drive.MetadataBuffer;
@@ -20,12 +18,9 @@ import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.query.SearchableField;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.umberto.medicinetracking.R;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -126,12 +121,7 @@ public class UploadSingleFileTask extends AsyncTask<Void, Integer,Void>{
                             mMetadata=metadata;
                                 if(metadata.getCount()>0){
                                         if(overWrite) {
-                                            mResourceClient.delete(metadata.get(0).getDriveId().asDriveFile()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    createFile();
-                                                }
-                                            });
+                                            mResourceClient.delete(metadata.get(0).getDriveId().asDriveFile()).addOnSuccessListener(aVoid -> createFile());
                                         } else {
                                             onLoadFinish(false,mContext.getString(R.string.error_file_exist),mContext.getString(R.string.error_file_exist));
                                         }

@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 public class EditActivity extends AppCompatActivity implements EditFragment.OnDeleteListener {
     public static final String KEY_MEDICINE_EDIT_ID="key_medicine_id";
     public static final String KEY_MEDICINE_EDIT_TITLE="key_medicine_title";
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
     private String mMedicineTitle;
@@ -41,8 +42,11 @@ public class EditActivity extends AppCompatActivity implements EditFragment.OnDe
                 if (extras.containsKey(KEY_MEDICINE_EDIT_TITLE)) {
                     mMedicineTitle = extras.getString(KEY_MEDICINE_EDIT_TITLE);
                 }
-                setupEditFragment();
+            } else {
+                mMedicineId = -1;
             }
+
+                setupEditFragment();
         }
 
         setupActionBar();

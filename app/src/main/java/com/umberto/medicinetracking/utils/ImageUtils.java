@@ -27,13 +27,6 @@ public class ImageUtils {
         return new File(pathUri.toString());
     }
 
-    //Get file uri
-    public static Uri getPath(Context context, String fileName){
-        return Uri.parse(context.getFilesDir().getAbsolutePath()).buildUpon()
-                .appendPath(fileName)
-                .build();
-    }
-
     /**
      * Resamples the captured photo to fit the screen for better memory usage.
      *
@@ -138,9 +131,6 @@ public class ImageUtils {
      * @return The path of the saved image.
      */
     public static String saveImage(Context context, Bitmap image, int medicineId) {
-
-        String savedImagePath = null;
-
         // Create the new file in the external storage
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());

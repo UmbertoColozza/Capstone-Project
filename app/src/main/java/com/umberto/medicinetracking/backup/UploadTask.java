@@ -4,16 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveContents;
-import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.drive.Metadata;
@@ -22,8 +17,6 @@ import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.query.SearchableField;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.umberto.medicinetracking.R;
@@ -57,14 +50,6 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
         if(mGoogleSignInAccount!=null){
             mResourceClient = Drive.getDriveResourceClient(mContext, mGoogleSignInAccount);
         }
-    }
-
-    private GoogleSignInClient buildGoogleSignInClient() {
-        GoogleSignInOptions signInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestScopes(Drive.SCOPE_APPFOLDER)
-                        .build();
-        return GoogleSignIn.getClient(mContext, signInOptions);
     }
 
     private void uploadFile(){
@@ -205,7 +190,6 @@ public class UploadTask extends AsyncTask<Void, Integer,Void>{
     }
     @Override
     protected Void doInBackground(Void... voids) {
-        boolean success=true;
         mFiles = ImageUtils.getListImage(mContext);
 
         if(mFiles==null || mFiles.length==0){

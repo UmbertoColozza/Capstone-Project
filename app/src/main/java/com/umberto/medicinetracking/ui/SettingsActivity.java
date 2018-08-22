@@ -9,13 +9,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.umberto.medicinetracking.R;
 import com.umberto.medicinetracking.backup.DownloadTask;
+import com.umberto.medicinetracking.backup.OnDownloadProgress;
 import com.umberto.medicinetracking.backup.OnUploadProgress;
 import com.umberto.medicinetracking.backup.UploadTask;
 import com.umberto.medicinetracking.backup.ExportToSD;
@@ -24,7 +23,7 @@ import com.umberto.medicinetracking.utils.PrefercenceUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SettingsActivity extends AppCompatActivity implements OnUploadProgress, DownloadTask.OnDownloadProgress {
+public class SettingsActivity extends AppCompatActivity implements OnUploadProgress, OnDownloadProgress {
     private static final int REQUEST_STORAGE_PERMISSION = 1;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;

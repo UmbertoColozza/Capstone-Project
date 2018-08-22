@@ -36,37 +36,28 @@ public class ExportSingleFileToSD extends AsyncTask<Void, Integer,String[]> {
         if (ContextCompat.checkSelfPermission(mContext,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            String[] messages = {mContext.getString(R.string.error_permission), mContext.getString(R.string.error_permission)};
-            return messages;
+            return new String[]{mContext.getString(R.string.error_permission), mContext.getString(R.string.error_permission)};
         }
         if (!SdIsPresent()) {
-            String[] messages = {mContext.getString(R.string.error_sd_not_exist), mContext.getString(R.string.error_sd_not_exist)};
-            return messages;
+            return new String[]{mContext.getString(R.string.error_sd_not_exist), mContext.getString(R.string.error_sd_not_exist)};
         }
         if (file.getName().equals(AppDatabase.DATABASE_NAME)) {
             AppDatabase.closeDb(mContext);
         }
-        File[] filesSd = null;
-        boolean existDir = true;
         File storageDir = new File(Environment.getExternalStorageDirectory() + "/MedicineTracking");
-        boolean success = true;
         if (!storageDir.exists()) {
             storageDir.mkdirs();
         }
 
-        File filedst = new File(storageDir.getAbsolutePath(), AppDatabase.DATABASE_NAME);
+        File filedst = new File(storageDir.getAbsolutePath(),file.getName());
         if (filedst.exists() && !overwrite) {
-            String[] messages = {mContext.getString(R.string.error_file_exist), mContext.getString(R.string.error_file_exist)};
-            return messages;
+            return new String[]{mContext.getString(R.string.error_file_exist), mContext.getString(R.string.error_file_exist)};
         }
         try {
-            File db = mContext.getDatabasePath(AppDatabase.DATABASE_NAME);
-            exportFile(file);
-
+            exportFile();
         } catch (IOException e) {
             e.printStackTrace();
-            String[] messages = {mContext.getString(R.string.error_file_copy), e.getMessage()};
-            return messages;
+            return new String[]{mContext.getString(R.string.error_file_copy), e.getMessage()};
         }
 
         return null;
@@ -75,20 +66,22 @@ public class ExportSingleFileToSD extends AsyncTask<Void, Integer,String[]> {
     @Override
     protected void onPostExecute(String[] messages) {
         super.onPostExecute(messages);
-        if(messages==null) {
-            onProgress.onFinishUpload(true,"","");
-        } else {
-            onProgress.onFinishUpload(false,messages[0],messages[1]);
+        if(onProgress!=null) {
+            if (messages == null) {
+                onProgress.onFinishUpload(true, "", "");
+            } else {
+                onProgress.onFinishUpload(false, messages[0], messages[1]);
+            }
         }
     }
 
-    private void exportFile(File src) throws IOException {
-        File dst = new File(Environment.getExternalStorageDirectory() + "/MedicineTracking", src.getName());
+    private void exportFile() throws IOException {
+        File dst = new File(Environment.getExternalStorageDirectory() + "/MedicineTracking", file.getName());
         FileChannel inChannel = null;
         FileChannel outChannel = null;
 
         try {
-            inChannel = new FileInputStream(src).getChannel();
+            inChannel = new FileInputStream(file).getChannel();
             outChannel = new FileOutputStream(dst).getChannel();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -1,18 +1,15 @@
 package com.umberto.medicinetracking.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +29,9 @@ import com.umberto.medicinetracking.database.Medicine;
 import com.umberto.medicinetracking.utils.ImageUtils;
 import com.umberto.medicinetracking.utils.MedicineUtils;
 import com.umberto.medicinetracking.utils.PrefercenceUtils;
-import java.util.List;
+
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnIt
             final Intent intent = new Intent(getApplicationContext(), EditActivity.class);
             startActivity(intent);
         });
-
         mRepository=new Repository(this);
 
         if(savedInstanceState==null) {
@@ -116,36 +114,39 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnIt
                 //Save list of expiring medicine in preference that will be used by the widget
                 PrefercenceUtils.setWidgetMedicine(MainActivity.this,list);
                 //Set notification for first expiring medicine
-                Medicine medicine=list.get(0);
-                CharSequence content = TextUtils.concat(getString(R.string.expire_date),MedicineUtils.dateToString(medicine.getExpireData()));
-                NotificationScheduler.setReminder(MainActivity.this,medicine.getExpireData(),medicine.getTitle(), content.toString(),medicine.getId());
+                for(Medicine item : list) {
+                    if(!item.getShowAlert()) {
+                        CharSequence content = TextUtils.concat(getString(R.string.expire_date), MedicineUtils.dateToString(item.getExpireData()));
+                        NotificationScheduler.setReminder(MainActivity.this, item.getExpireData(), item.getTitle(), content.toString(), item.getId());
+                        break;
+                    }
+                }
             }
             else {
                 PrefercenceUtils.setWidgetMedicine(MainActivity.this,null);
             }
-            Log.d("Main","List "+ PrefercenceUtils.getWidgetMedicine(MainActivity.this).size());
             //Update widget
-            Log.d("Main", "Update widget");
             MedicineUtils.updateWidget(MainActivity.this);
         });
     }
 
     //Show alert if exist
-    private void showAlert(int medicineId){
-            MedicineViewModelFactory viewModelFactory = new MedicineViewModelFactory(mRepository, medicineId);
-            final MedicineViewModel viewModel = ViewModelProviders.of(this, viewModelFactory).get(MedicineViewModel.class);
-            viewModel.getMedicine().observe(this, medicine -> {
-                if(medicine!=null) {
-                    showAlert(medicine);
-                }
-                viewModel.getMedicine().removeObservers(MainActivity.this);
-            });
+    private void showAlert(int medicineId) {
+        MedicineViewModelFactory viewModelFactory = new MedicineViewModelFactory(mRepository, medicineId);
+        final MedicineViewModel viewModel = ViewModelProviders.of(this, viewModelFactory).get(MedicineViewModel.class);
+        viewModel.getMedicine().observe(this, medicine -> {
+            if (medicine != null) {
+                showAlert(medicine);
+            }
+            viewModel.getMedicine().removeObservers(MainActivity.this);
+        });
+        mRepository.updateMedicineShowAlert(medicineId);
     }
 
     private void showAlert(Medicine medicine){
         AlertDialog.Builder alertadd = new AlertDialog.Builder(this);
         LayoutInflater factory = LayoutInflater.from(this);
-        final View view = factory.inflate(R.layout.alert_layout, null);
+        @SuppressLint("InflateParams") final View view = factory.inflate(R.layout.alert_layout, null);
         TextView tvTitle=view.findViewById(R.id.textview_medicine_title_alert);
         TextView tvExpireData=view.findViewById(R.id.textview_expire_date_alert);
         ImageView dialogImage=view.findViewById(R.id.dialog_imageview);
@@ -214,8 +215,6 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnIt
     @Override
     protected void onResume() {
         super.onResume();
-        if(!mRepository.isOpen(this)){
-            getExpiringMedicine();
-        }
+        getExpiringMedicine();
     }
 }

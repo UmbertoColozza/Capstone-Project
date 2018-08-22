@@ -4,9 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,18 +13,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -46,6 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
+import com.umberto.medicinetracking.backup.ExportSingleFileToSD;
 import com.umberto.medicinetracking.database.Medicine;
 import com.umberto.medicinetracking.database.MedicineViewModel;
 import com.umberto.medicinetracking.database.MedicineViewModelFactory;
@@ -330,9 +326,14 @@ public class EditFragment extends Fragment implements EditPhotoListAdapter.OnDel
         PrefercenceUtils.setMedicineChanged(getContext(), true);
 
         if(PrefercenceUtils.getBackup(getContext())){
-            if(PrefercenceUtils.getBackupRemote(getContext()) && PrefercenceUtils.getWhenBackup(getContext())){
-                UploadSingleFileTask uploadSingleFileTask = new UploadSingleFileTask(getContext(),ImageUtils.getFile(getContext(), photo.getFileName()),false,null);
-                uploadSingleFileTask.execute();
+            if(PrefercenceUtils.getWhenBackup(getContext())){
+                if(PrefercenceUtils.getBackupRemote(getContext())) {
+                    UploadSingleFileTask uploadSingleFileTask = new UploadSingleFileTask(getContext(), ImageUtils.getFile(getContext(), photo.getFileName()), false, null);
+                    uploadSingleFileTask.execute();
+                } else {
+                    ExportSingleFileToSD exportSingleFileToSD = new ExportSingleFileToSD(getContext(),ImageUtils.getFile(getContext(), photo.getFileName()), false, null);
+                    exportSingleFileToSD.execute();
+                }
             }
         }
     }

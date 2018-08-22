@@ -9,8 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import com.umberto.medicinetracking.R;
@@ -21,9 +19,9 @@ import static android.content.Context.ALARM_SERVICE;
 
 public class NotificationScheduler
 {
-    public static final int MEDICINE_REQUEST_CODE=100;
-    public static final String CHANNEL_ID="1234";
-    public static final String CHANNEL_NAME="medicine";
+    private static final int MEDICINE_REQUEST_CODE=100;
+    private static final String CHANNEL_ID="1234";
+    private static final String CHANNEL_NAME="medicine";
     public static final String NOTIFICATION_TITLE="notification_title";
     public static final String NOTIFICATION_CONTENT="notification_content";
     public static final String NOTIFICATION_MEDICINE_ID="notification_medicine_id";
@@ -68,8 +66,6 @@ public class NotificationScheduler
 
     public static void showNotification(Context context, String title, String content,int medicineId)
     {
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.putExtra(NOTIFICATION_TITLE, title);
         notificationIntent.putExtra(NOTIFICATION_CONTENT, content);
@@ -83,13 +79,12 @@ public class NotificationScheduler
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(MEDICINE_REQUEST_CODE, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //Create notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,CHANNEL_ID);
 
         builder.setContentTitle(title)
                 .setContentText(content)
                 .setAutoCancel(true)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setChannelId("4565")
+                .setSmallIcon(R.mipmap.ic_notification)
                 .setContentIntent(pendingIntent);
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)

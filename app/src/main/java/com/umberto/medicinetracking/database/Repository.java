@@ -2,6 +2,9 @@ package com.umberto.medicinetracking.database;
 
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+
+import com.umberto.medicinetracking.utils.MedicineUtils;
+
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +31,7 @@ public class Repository {
         return geAppDatabase(mContext).taskDao();
     }
 
-    public boolean isOpen(Context context){
+    public boolean isOpen(){
         geAppDatabase(mContext);
         return appDatabase.isOpen();
     }
@@ -47,7 +50,7 @@ public class Repository {
     }
 
     public LiveData<List<Medicine>> getExpiringMedicine(){
-        return getTaskDAO().selectExpiringMedicine((new Date()).getTime());
+        return getTaskDAO().selectExpiringMedicine(MedicineUtils.getDateWithoutTime(new Date()).getTime());
     }
 
     public void insertUpdateMedicine(Medicine medicine, InsertCallback callback){
@@ -63,10 +66,15 @@ public class Repository {
             }
         });
     }
+    public void updateMedicineShowAlert(int medicineId){
+        this.callback=callback;
+        AppExecutors.getInstance().diskIO().execute(() -> {
+                getTaskDAO().updateMedicineShowAlert(medicineId);
+        });
+    }
 
     //PHOTO
     public void updatePhotoMedicine(int medicineId, String fileName){
-        this.callback=callback;
         AppExecutors.getInstance().diskIO().execute(() -> getTaskDAO().updateMedicineFileName(fileName, medicineId));
     }
     public void deleteMedicine(Medicine medicine){
@@ -74,7 +82,6 @@ public class Repository {
     }
 
     public void insertUpdatePhoto(Photo photo){
-        this.callback=callback;
         AppExecutors.getInstance().diskIO().execute(() -> {
             if(photo.getId()==0) {
                 getTaskDAO().insertPhoto(photo);
